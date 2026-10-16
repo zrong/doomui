@@ -1,0 +1,567 @@
+<main class="sync-panel">
+  <header class="panel-header">
+    <div>
+      <h1>Figma Sync</h1>
+      <p>Figma 与 Cocos Creator 3.8.6 的设计交付工具</p>
+    </div>
+    <span class="version">v{{ packageVersion }}</span>
+  </header>
+
+  <section
+    v-if="status"
+    class="status"
+    :class="statusKind"
+    role="status"
+    aria-live="polite"
+  >
+    <strong class="status-title">{{ statusPresentation.title }}</strong>
+    <span v-if="statusPresentation.detail" class="status-detail">{{ statusPresentation.detail }}</span>
+    <code v-if="statusPresentation.path" class="status-path">{{ statusPresentation.path }}</code>
+    <div v-if="statusPresentation.recovery === 'sync-from-figma'" class="status-recovery">
+      <strong>下一步</strong>
+      <ol>
+        <li>如果 Figma 中仍有对应 Frame，转到“同步到 Cocos”，从 Cocos Sync 推送该 Frame，再预览并应用。</li>
+        <li>如果 Figma 设计节点也已删除，请先恢复或填写另一个真实存在的 <code>db://assets/**/*.prefab</code>，选择导入类型后再准备导入。</li>
+      </ol>
+      <ui-button class="status-action" :disabled="busy" @confirm="recoverMissingPrefabFromFigma">
+        转到同步到 Cocos
+      </ui-button>
+    </div>
+  </section>
+
+  <details
+    class="card connection-card"
+    :open="!pushStatus?.paired"
+  >
+    <summary>
+      <span class="connection-title">
+        <i class="status-dot" :class="desktopConnectionState" aria-hidden="true"></i>
+        Desktop 连接
+      </span>
+      <span class="connection-summary" :class="desktopConnectionState">
+        {{ pushStatus?.running ? (pushStatus.paired ? '已配对' : '等待配对') : '未启动' }}
+      </span>
+    </summary>
+    <template v-if="pushStatus?.running">
+      <div class="push-grid">
+        <div>
+          <label>本机服务</label>
+          <code>{{ pushStatus.endpoint }}</code>
+        </div>
+        <div>
+          <div class="pairing-heading">
+            <label>配对码</label>
+            <button
+              type="button"
+              class="pairing-icon copy-code"
+              title="复制配对码"
+              aria-label="复制配对码"
+              @click="copyPairingCode"
+            >
+              <svg viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M5.5 2.5h6a2 2 0 0 1 2 2v6"></path>
+                <rect x="2.5" y="5.5" width="8" height="8" rx="1.5"></rect>
+              </svg>
+            </button>
+            <button
+              type="button"
+              class="pairing-icon reset-pairing"
+              title="重置配对"
+              aria-label="重置配对"
+              @click="resetPushPairing"
+            >
+              <svg viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M13.5 6.5A6 6 0 1 0 14 8"></path>
+                <path d="M14 3v5H9"></path>
+              </svg>
+            </button>
+          </div>
+          <code class="pair-code" title="可选中复制">{{ pushStatus.pairingCode }}</code>
+        </div>
+      </div>
+      <small class="pairing-hint">{{ pushStatus.paired ? '已有 Figma Desktop 客户端配对' : '在 Cocos Sync 中输入配对码' }}</small>
+    </template>
+    <p v-if="pushStatus?.error" class="push-error">{{ pushStatus.error }}</p>
+  </details>
+
+  <details class="card settings-card shared-texture-settings-card">
+    <summary class="settings-summary">
+      <span>
+        <strong>共享纹理 Bundle 根目录</strong>
+        <small>{{ form.sharedTextureRoots.length ? `${form.sharedTextureRoots.length} 个 Asset Bundle` : '未配置' }}</small>
+      </span>
+      <span class="shared-badge">三个工作流共用</span>
+    </summary>
+    <div class="settings-content">
+      <div class="settings-field shared-texture-field">
+        <label>允许复用的 Asset Bundle（每行一个）</label>
+        <textarea
+          :value="sharedTextureRootsText"
+          placeholder="db://assets/subpackages/common"
+          @change="setSharedTextureRoots"
+        ></textarea>
+        <p class="field-hint">
+          同步、Prefab 接管和 Shared Assets Catalog 共用此白名单。仅复用身份、内容与九宫格仍一致的 SpriteFrame；插件不会修改、复制或删除它们。
+        </p>
+      </div>
+    </div>
+  </details>
+
+  <nav class="workflow-tabs" role="tablist" aria-label="工作流">
+    <button
+      id="sync-workflow-tab"
+      type="button"
+      role="tab"
+      :class="{ active: activeWorkflow === 'sync' }"
+      :aria-selected="activeWorkflow === 'sync'"
+      aria-controls="sync-workflow-panel"
+      @click="selectWorkflow('sync')"
+    >
+      <strong>同步到 Cocos</strong>
+      <span>日常设计更新</span>
+    </button>
+    <button
+      id="adoption-workflow-tab"
+      type="button"
+      role="tab"
+      :class="{ active: activeWorkflow === 'adoption' }"
+      :aria-selected="activeWorkflow === 'adoption'"
+      aria-controls="adoption-workflow-panel"
+      @click="selectWorkflow('adoption')"
+    >
+      <strong>创建 Figma 起点</strong>
+      <span>一次性接管现有 Prefab</span>
+    </button>
+    <button
+      id="shared-assets-workflow-tab"
+      type="button"
+      role="tab"
+      :class="{ active: activeWorkflow === 'shared-assets' }"
+      :aria-selected="activeWorkflow === 'shared-assets'"
+      aria-controls="shared-assets-workflow-panel"
+      @click="selectWorkflow('shared-assets')"
+    >
+      <strong>共享素材</strong>
+      <span>导入 Catalog</span>
+    </button>
+  </nav>
+
+  <div class="workflow-content">
+  <section
+    v-show="activeWorkflow === 'sync'"
+    id="sync-workflow-panel"
+    class="workflow-panel"
+    role="tabpanel"
+    aria-labelledby="sync-workflow-tab"
+  >
+    <details class="card settings-card">
+      <summary class="settings-summary">
+        <span>
+          <strong>输出设置</strong>
+          <small>统一 Prefab · {{ form.bundleRoot || '未设置 Asset Bundle' }}</small>
+        </span>
+        <span class="shared-badge">Desktop Push</span>
+      </summary>
+      <div class="settings-content">
+        <div class="settings-field output-directory-field">
+          <label>Asset Bundle 根目录</label>
+          <ui-input
+            class="full"
+            :value="form.bundleRoot"
+            placeholder="db://assets/subpackages/hall"
+            @confirm="setBundleRoot"
+          ></ui-input>
+          <p class="field-hint">所有生成资源都位于该 Asset Bundle 内；同一 Bundle 只保存一份相同图片。</p>
+        </div>
+
+        <div class="path-contract" aria-label="统一输出目录规范">
+          <p><span>UI 逻辑</span><code>prefabs/view/UI_Name.prefab</code></p>
+          <p><span>UI 视觉</span><code>prefabs/view/figma/UI_Name.root.prefab</code></p>
+          <p><span>Item 逻辑</span><code>prefabs/item/item_Name.prefab</code></p>
+          <p><span>Item 视觉</span><code>prefabs/item/figma/item_Name.root.prefab</code></p>
+          <p><span>贴图</span><code>textures/figma/</code></p>
+        </div>
+
+        <details class="font-settings">
+          <summary>字体映射 <span>{{ Object.keys(form.fontMap).length }} 项</span></summary>
+          <p class="hint">FigmaFamily/Style = db://assets/fonts/font.ttf</p>
+          <textarea :value="fontMapText" @change="setFontMap"></textarea>
+        </details>
+      </div>
+    </details>
+
+    <section v-if="previewData" class="card results">
+      <div class="result-head">
+        <h2>变更预览</h2>
+        <span>Desktop Push · Figma {{ previewData.fileVersion }}</span>
+      </div>
+      <div class="metrics">
+        <span>新增 {{ countChange('add') }}</span>
+        <span>更新 {{ countChange('update') }}</span>
+        <span>移除 {{ countChange('delete', false) }}</span>
+        <span>解除管理 {{ countOrphans() }}</span>
+        <span>共享复用 {{ countChange('reuse') }}</span>
+        <span>未变 {{ countChange('unchanged') }}</span>
+      </div>
+      <div v-if="previewData.rebuildFromEmptyOutput" class="baseline-notice" role="status">
+        <strong>检测到输出已清空，本次按全新重建</strong>
+        <span>
+          旧映射记录的 {{ previewData.rebuildFromEmptyOutput.previousTrackedAssets }} 个输出均已不存在。
+          Preview 不会把旧节点计为删除，也不会因此要求确认破坏性绑定；Apply 后会用本次结果替换旧映射。
+        </span>
+      </div>
+
+      <div class="preview-detail-group">
+        <details v-if="previewData.outputPaths" open class="detail-card preview-detail output-paths">
+          <summary>解析后的输出路径</summary>
+          <div class="preview-detail-content">
+            <p><span>UI 逻辑</span><code>{{ previewData.outputPaths.logicPrefabUrl }}</code></p>
+            <p><span>UI 视觉</span><code>{{ previewData.outputPaths.visualPrefabUrl }}</code></p>
+            <p><span>Item 逻辑</span><code>{{ previewData.outputPaths.itemRoot }}</code></p>
+            <p><span>Item 视觉</span><code>{{ previewData.outputPaths.itemVisualRoot }}</code></p>
+            <p><span>贴图</span><code>{{ previewData.outputPaths.textureRoot }}</code></p>
+          </div>
+        </details>
+
+        <details v-if="previewData.blockers.length" open class="detail-card preview-detail blockers">
+          <summary>阻断项（{{ previewData.blockers.length }}）</summary>
+          <div class="preview-detail-content issue-list">
+            <p v-for="item in previewData.blockers" :key="item.code + item.nodeId">{{ item.message }}</p>
+          </div>
+        </details>
+        <details v-if="previewData.warnings.length" open class="detail-card preview-detail warnings">
+          <summary>警告（{{ previewData.warnings.length }}）</summary>
+          <div class="preview-detail-content issue-list">
+            <p v-for="item in previewData.warnings" :key="item.code + item.nodeId">{{ item.message }}</p>
+          </div>
+        </details>
+        <label v-if="previewData.requiresBindingConfirmation" class="binding-confirmation">
+          <input v-model="bindingChangesConfirmed" type="checkbox">
+          <span>确认本次破坏性绑定契约变更；Apply 后我会同步修改业务绑定代码</span>
+        </label>
+        <details v-if="meaningfulChanges.length" class="detail-card preview-detail changes">
+          <summary>
+            <span>变更详情（{{ meaningfulChanges.length }}）</span>
+            <small v-if="countChange('unchanged')">已隐藏 SAME {{ countChange('unchanged') }} 项</small>
+          </summary>
+          <div class="preview-detail-content change-groups">
+            <details v-for="group in changeGroups" :key="group.key" class="change-group">
+              <summary>
+                <span>{{ group.label }}</span>
+                <small>{{ group.items.length }} 项</small>
+              </summary>
+              <div class="change-list">
+                <div v-for="item in group.items" :key="item.key" class="change-row">
+                  <div class="change-main">
+                    <span class="change-kind" :class="item.key.startsWith('orphan:') ? 'orphan' : item.kind">
+                      {{ changeKindLabel(item) }}
+                    </span>
+                    <strong>{{ changeDisplayName(item) }}</strong>
+                    <span>{{ item.detail }}</span>
+                  </div>
+                  <code class="change-path" :title="item.path">{{ item.path }}</code>
+                </div>
+              </div>
+            </details>
+          </div>
+        </details>
+      </div>
+      <div class="actions result-actions">
+        <span class="action-hint">Apply 仅使用当前预览 plan；失败会回滚本次写入</span>
+        <ui-button v-if="busy" @confirm="cancel">取消</ui-button>
+        <ui-button class="apply" :disabled="busy || !canApply" @confirm="apply">应用同步</ui-button>
+      </div>
+    </section>
+
+    <details class="card orphan-cleanup-card" :open="pendingOrphans.length > 0">
+      <summary class="orphan-cleanup-summary">
+        <span>
+          <strong>孤儿资源维护</strong>
+          <small>{{ pendingOrphans.length ? `${pendingOrphans.length} 个文件等待确认` : '可扫描旧版本遗留输出' }}</small>
+        </span>
+        <span class="orphan-count">{{ pendingOrphans.length }}</span>
+      </summary>
+      <div class="orphan-cleanup-content">
+        <details class="detail-card managed-targets">
+          <summary>
+            <span>同步目标映射</span>
+            <small>{{ managedSyncTargets.length }} 项</small>
+          </summary>
+          <div class="managed-targets-content">
+            <p class="hint">
+              退役只移除 Figma 同步身份和插件所有权；逻辑 Prefab、共享素材及文件不会立即删除。
+            </p>
+            <p v-if="!managedSyncTargets.length" class="orphan-empty">当前没有已管理的同步目标。</p>
+            <div v-else class="managed-target-list">
+              <div v-for="target in managedSyncTargets" :key="target.frameKey" class="managed-target-row">
+                <div class="managed-target-main">
+                  <strong>{{ target.frameName }}</strong>
+                  <span>{{ target.kind === 'item' ? 'Item Component' : 'UI Frame' }} · {{ managedTargetStateLabel(target.adoptionState) }}</span>
+                  <code :title="target.frameKey">{{ target.fileKey }}:{{ target.nodeId }}</code>
+                  <code :title="target.visualPrefabUrl">{{ target.visualPrefabUrl }}</code>
+                </div>
+                <ui-button
+                  class="retire-target-action"
+                  :disabled="busy"
+                  @confirm="selectRetireTarget(target.frameKey)"
+                >退役…</ui-button>
+              </div>
+            </div>
+            <div v-if="selectedRetireTarget" class="retire-target-confirmation">
+              <strong>确认退役 {{ selectedRetireTarget.frameName }}</strong>
+              <p>
+                将移除节点 {{ selectedRetireTarget.nodeId }} 的同步映射；
+                {{ selectedRetireTarget.ownedAssetCount }} 个已记录资源会重新计算所有权。
+              </p>
+              <label>
+                <input v-model="retireTargetConfirmed" type="checkbox">
+                <span>我确认停止管理这个同步目标；后续如需恢复必须重新 Push 或重新接管</span>
+              </label>
+              <div class="actions">
+                <ui-button :disabled="busy" @confirm="cancelRetireTarget">取消</ui-button>
+                <ui-button
+                  class="danger-action"
+                  :disabled="busy || !retireTargetConfirmed"
+                  @confirm="retireManagedSyncTarget"
+                >确认退役</ui-button>
+              </div>
+            </div>
+          </div>
+        </details>
+        <p class="hint">扫描只读取标准生成目录并排除现有 Frame 所有权，不会删除文件。Apply 新产生的孤儿会自动进入这里。</p>
+        <div class="actions orphan-scan-actions">
+          <span class="action-hint">用于找回旧版本未持久化的 orphan 报告</span>
+          <ui-button :disabled="busy" @confirm="discoverLegacyOrphans">扫描旧输出</ui-button>
+        </div>
+        <p v-if="!pendingOrphans.length" class="orphan-empty">当前没有待清理资源。</p>
+        <template v-else>
+          <details class="detail-card orphan-list">
+            <summary>
+              <span>查看完整资源路径</span>
+              <small>{{ pendingOrphans.length }} 项</small>
+            </summary>
+            <div class="orphan-paths">
+              <code v-for="path in pendingOrphans" :key="path">{{ path }}</code>
+            </div>
+          </details>
+          <details v-if="orphanCleanupBlocked.length" open class="detail-card orphan-blocked">
+            <summary>
+              <span>未删除项</span>
+              <small>{{ orphanCleanupBlocked.length }} 项</small>
+            </summary>
+            <div class="orphan-blocked-list">
+              <div v-for="item in orphanCleanupBlocked" :key="item.path">
+                <code>{{ item.path }}</code>
+                <strong>{{ item.reason }}</strong>
+                <code v-for="dependent in item.dependents || []" :key="dependent" class="dependent-path">
+                  引用：{{ dependent }}
+                </code>
+              </div>
+            </div>
+          </details>
+          <label class="orphan-confirmation">
+            <input v-model="orphanCleanupConfirmed" type="checkbox">
+            <span>我确认永久删除未被映射或工程其他资源引用的插件生成文件</span>
+          </label>
+          <div class="actions orphan-actions">
+            <span class="action-hint">逻辑 Prefab、非插件目录和仍被引用的文件不会删除</span>
+            <ui-button
+              class="danger-action"
+              :disabled="busy || !orphanCleanupConfirmed"
+              @confirm="cleanupOrphans"
+            >清理孤儿资源</ui-button>
+          </div>
+        </template>
+      </div>
+    </details>
+  </section>
+
+  <section
+    v-show="activeWorkflow === 'adoption'"
+    id="adoption-workflow-panel"
+    class="workflow-panel"
+    role="tabpanel"
+    aria-labelledby="adoption-workflow-tab"
+  >
+    <section class="card adoption-card">
+      <div class="section-heading">
+        <div>
+          <h2>从现有 Prefab 创建 Figma 起点</h2>
+          <p>一次性读取结构与图片：View 建立可编辑 Frame，Item 建立 Page 直属 Component；不会复制或修改源 Prefab。</p>
+        </div>
+        <span class="shared-badge">一次性</span>
+      </div>
+      <template v-if="pushStatus?.activeAdoption">
+        <div class="adoption-summary">
+          <strong>{{ pushStatus.activeAdoption.prefabName }}</strong>
+          <small>
+            {{ pushStatus.activeAdoption.kind === 'item' ? 'Item Component' : 'UI Frame' }} ·
+            {{ pushStatus.activeAdoption.nodeCount }} 个节点 ·
+            {{ pushStatus.activeAdoption.assetCount }} 张图片 ·
+            {{ pushStatus.activeAdoption.warningCount }} 个警告
+          </small>
+          <code class="adoption-prefab-url">{{ pushStatus.activeAdoption.prefabUrl }}</code>
+        </div>
+        <div class="adoption-detail-group">
+          <details class="detail-card adoption-detail">
+            <summary>
+              <span>节点</span>
+              <small>{{ pushStatus.activeAdoption.nodeCount }} 项</small>
+            </summary>
+            <ol v-if="pushStatus.activeAdoption.nodes?.length" class="adoption-detail-list">
+              <li v-for="node in pushStatus.activeAdoption.nodes" :key="node.path + node.kind">
+                <code>{{ node.path }}</code>
+                <span>{{ node.kind === 'text' ? '文字' : (node.kind === 'sprite' ? '图片' : '容器') }}</span>
+              </li>
+            </ol>
+            <p v-else class="adoption-detail-empty">
+              {{ pushStatus.activeAdoption.nodeCount ? '当前连接未提供节点明细，请重新加载 Figma Sync。' : '没有节点' }}
+            </p>
+          </details>
+          <details class="detail-card adoption-detail">
+            <summary>
+              <span>图片</span>
+              <small>{{ pushStatus.activeAdoption.assetCount }} 项</small>
+            </summary>
+            <ol v-if="pushStatus.activeAdoption.assets?.length" class="adoption-detail-list">
+              <li v-for="asset in pushStatus.activeAdoption.assets" :key="asset.key">
+                <code>{{ asset.sourceUrl }}</code>
+                <span>{{ asset.width }} × {{ asset.height }}</span>
+              </li>
+            </ol>
+            <p v-else class="adoption-detail-empty">
+              {{ pushStatus.activeAdoption.assetCount ? '当前连接未提供图片明细，请重新加载 Figma Sync。' : '没有引用图片' }}
+            </p>
+          </details>
+          <details class="detail-card adoption-detail">
+            <summary>
+              <span>警告</span>
+              <small>{{ pushStatus.activeAdoption.warningCount }} 项</small>
+            </summary>
+            <ol v-if="pushStatus.activeAdoption.warnings?.length" class="adoption-detail-list adoption-warning-list">
+              <li v-for="(warning, index) in pushStatus.activeAdoption.warnings" :key="warning + index">
+                <span>{{ warning }}</span>
+              </li>
+            </ol>
+            <p v-else class="adoption-detail-empty">
+              {{ pushStatus.activeAdoption.warningCount ? '当前连接未提供警告明细，请重新加载 Figma Sync。' : '没有警告' }}
+            </p>
+          </details>
+        </div>
+        <div class="row push-actions">
+          <small v-if="pushStatus.activeAdoption.status === 'imported' && pushStatus.activeAdoption.kind === 'item'">
+            已导入 Item Component；先备份程序逻辑，确认后删除旧 Item 双 Prefab，再明确选择该 Component 推送重建
+          </small>
+          <small v-else>{{ pushStatus.activeAdoption.status === 'imported' ? '已导入 Figma；后续使用“同步到 Cocos”' : '等待在 Figma Desktop 的 Cocos Sync 中导入' }}</small>
+          <ui-button :disabled="busy" @confirm="cancelCocosAdoption">取消会话</ui-button>
+        </div>
+      </template>
+      <template v-else>
+        <label>在 Figma 中创建为</label>
+        <div class="adoption-kind-options" role="radiogroup" aria-label="Prefab 导入类型">
+          <label :class="{ active: adoptionKind === 'view' }">
+            <input v-model="adoptionKind" type="radio" value="view">
+            <span><strong>UI Frame</strong><small>作为界面设计起点</small></span>
+          </label>
+          <label :class="{ active: adoptionKind === 'item' }">
+            <input v-model="adoptionKind" type="radio" value="item">
+            <span><strong>Item Component</strong><small>作为独立列表项或复用组件</small></span>
+          </label>
+        </div>
+        <label>源 Prefab 路径</label>
+        <p class="hint">自动读取当前正在编辑的任意工程 Prefab；未处于 Prefab 编辑模式时使用资源管理器单选，也可以手动修改完整 db:// 路径。</p>
+        <ui-input
+          class="full"
+          :value="adoptionPrefabUrl"
+          placeholder="db://assets/.../Any.prefab"
+          @confirm="setAdoptionPrefabUrl"
+        ></ui-input>
+        <p v-if="adoptionPrefabUrl" class="adoption-input-preview">
+          <span>当前完整路径</span>
+          <code class="adoption-prefab-url">{{ adoptionPrefabUrl }}</code>
+        </p>
+        <p v-if="adoptionKind === 'item'" class="hint">Item 接管完成后先备份程序员维护的脚本与组件，再人工确认并删除旧 Item 双 Prefab；第一次 UI Push / Apply 会按 Figma Component 重建标准双 Prefab。</p>
+        <p v-else class="hint">源 Prefab 只读且保持原路径；后续从新建的 Figma Frame 推送到输出设置指定的标准 View 路径。</p>
+        <div class="actions">
+          <span class="action-hint">短期会话只保存在内存中，30 分钟后过期</span>
+          <ui-button class="apply" :disabled="busy || !pushStatus?.running" @confirm="createCocosAdoption">准备导入</ui-button>
+        </div>
+      </template>
+    </section>
+  </section>
+
+  <section
+    v-show="activeWorkflow === 'shared-assets'"
+    id="shared-assets-workflow-panel"
+    class="workflow-panel"
+    role="tabpanel"
+    aria-labelledby="shared-assets-workflow-tab"
+  >
+    <section class="card adoption-card">
+      <div class="section-heading">
+        <div>
+          <h2>把 Cocos 通用素材加入 Figma Catalog</h2>
+          <p>在资源管理器中单选或多选图片；只读取已配置的共享 Bundle，不复制、修改或删除 Cocos 原资源。</p>
+        </div>
+        <span class="shared-badge">可增量</span>
+      </div>
+
+      <template v-if="pushStatus?.activeSharedAssets">
+        <div class="adoption-summary">
+          <strong>DoomUI Shared Assets</strong>
+          <small>
+            {{ pushStatus.activeSharedAssets.assetCount }} 项 ·
+            {{ pushStatus.activeSharedAssets.status === 'imported' ? '已写入 Figma Catalog' : '等待 Figma 导入' }}
+          </small>
+        </div>
+        <div class="adoption-detail-group">
+          <details class="detail-card adoption-detail" open>
+            <summary>
+              <span>共享素材</span>
+              <small>{{ pushStatus.activeSharedAssets.assetCount }} 项</small>
+            </summary>
+            <ol class="adoption-detail-list">
+              <li v-for="asset in pushStatus.activeSharedAssets.assets" :key="asset.sourceSpriteFrameUuid">
+                <code>{{ asset.sourceUrl }}</code>
+                <span>{{ asset.width }} × {{ asset.height }}{{ asset.sliced ? ' · 九宫格' : '' }}</span>
+              </li>
+            </ol>
+          </details>
+        </div>
+        <div class="row push-actions">
+          <small>
+            {{ pushStatus.activeSharedAssets.status === 'imported'
+              ? '已保存精确 SpriteFrame ↔ Figma Component 映射；后续设计同步可直接复用'
+              : '请在 Figma Desktop 的 Cocos Sync 中导入到当前文件唯一的 Catalog' }}
+          </small>
+          <ui-button :disabled="busy" @confirm="cancelSharedAssetCatalog">{{ pushStatus.activeSharedAssets.status === 'imported' ? '关闭会话' : '取消会话' }}</ui-button>
+        </div>
+      </template>
+
+      <template v-else>
+        <div class="adoption-summary">
+          <strong>资源管理器当前选择</strong>
+          <small>{{ sharedAssetSelection.selectedCount }} 个选择 · {{ sharedAssetSelection.items.length }} 个可导入</small>
+        </div>
+        <ol v-if="sharedAssetSelection.items.length" class="adoption-detail-list">
+          <li v-for="asset in sharedAssetSelection.items" :key="asset.sourceSpriteFrameUuid">
+            <code>{{ asset.sourceUrl }}</code>
+            <span>{{ asset.sliced ? '九宫格' : '普通' }}</span>
+          </li>
+        </ol>
+        <div v-if="sharedAssetSelection.errors.length" class="issue-list">
+          <p v-for="message in sharedAssetSelection.errors" :key="message">{{ message }}</p>
+        </div>
+        <div class="actions">
+          <span class="action-hint">短期会话只保存在内存中，30 分钟后过期</span>
+          <ui-button
+            class="apply"
+            :disabled="busy || !pushStatus?.running || !!sharedAssetSelection.errors.length || !sharedAssetSelection.items.length"
+            @confirm="createSharedAssetCatalog"
+          >准备共享素材</ui-button>
+        </div>
+      </template>
+    </section>
+  </section>
+  </div>
+</main>

@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root { height: 100%; color-scheme: light dark; font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    * { box-sizing: border-box; }
+    body { display: flex; flex-direction: column; height: 100%; min-height: 0; margin: 0; padding: 14px; overflow: hidden; color: var(--figma-color-text); background: var(--figma-color-bg); font-size: 12px; }
+    h1 { margin: 0; font-size: 18px; }
+    .subtitle { margin: 3px 0 12px; color: var(--figma-color-text-secondary); }
+    .card { padding: 12px; border: 1px solid var(--figma-color-border); border-radius: 6px; background: var(--figma-color-bg-secondary); }
+    .row { display: flex; align-items: center; gap: 8px; }
+    .between { justify-content: space-between; }
+    .grow { flex: 1; }
+    label { display: block; margin-bottom: 6px; color: var(--figma-color-text-secondary); }
+    input, select { width: 100%; height: 32px; padding: 0 9px; color: var(--figma-color-text); background: var(--figma-color-bg); border: 1px solid var(--figma-color-border); border-radius: 4px; }
+    input { text-transform: uppercase; letter-spacing: 1px; }
+    button { min-height: 32px; padding: 0 12px; border: 0; border-radius: 4px; cursor: pointer; color: var(--figma-color-text-onbrand); background: var(--figma-color-bg-brand); }
+    button.secondary { color: var(--figma-color-text); background: var(--figma-color-bg-tertiary); }
+    button:disabled { opacity: .45; cursor: default; }
+    code { color: var(--figma-color-text-secondary); font-size: 11px; }
+    .hidden { display: none !important; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--figma-color-icon-danger); }
+    .dot.online { background: var(--figma-color-icon-success); }
+    .connection { margin-bottom: 10px; padding: 0; }
+    details > summary { display: flex; align-items: center; gap: 8px; list-style: none; cursor: pointer; font-weight: 600; }
+    details > summary::-webkit-details-marker { display: none; }
+    details > summary::before { width: 7px; height: 7px; flex: 0 0 7px; border: solid currentColor; border-width: 0 1.5px 1.5px 0; content: ""; transform: rotate(-45deg); transition: transform 120ms ease; }
+    details[open] > summary::before { transform: rotate(45deg); }
+    details > summary:focus-visible { outline: 2px solid var(--figma-color-border-brand-strong, var(--figma-color-border-brand)); outline-offset: 2px; }
+    @media (prefers-reduced-motion: reduce) { details > summary::before { transition: none; } }
+    .connection > summary { justify-content: flex-start; min-height: 40px; padding: 0 11px; }
+    .connection-title { display: flex; align-items: center; gap: 7px; }
+    .connection-summary { margin-left: auto; color: var(--figma-color-text-secondary); font-weight: 400; }
+    .connection[open] > summary { border-bottom: 1px solid var(--figma-color-border); }
+    .connection-body { padding: 10px 11px 11px; }
+    .endpoint { margin: 0 0 9px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .workflow-tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-bottom: 10px; overflow: hidden; border: 1px solid var(--figma-color-border); border-radius: 6px; background: var(--figma-color-bg-secondary); }
+    .workflow-tabs button { display: grid; justify-items: start; min-width: 0; min-height: 54px; padding: 8px 10px; gap: 2px; border-radius: 0; color: var(--figma-color-text-secondary); background: transparent; text-align: left; }
+    .workflow-tabs button + button { border-left: 1px solid var(--figma-color-border); }
+    .workflow-tabs button.active { color: var(--figma-color-text); background: var(--figma-color-bg); box-shadow: inset 0 -2px var(--figma-color-bg-brand); }
+    .workflow-tabs strong { font-size: 12px; }
+    .workflow-tabs span { overflow: hidden; max-width: 100%; color: var(--figma-color-text-secondary); font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+    .workflow-panel { display: grid; gap: 10px; }
+    .section-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+    .section-heading h2 { margin: 0; font-size: 13px; }
+    .section-heading p { margin: 4px 0 0; color: var(--figma-color-text-secondary); line-height: 1.4; }
+    .badge { padding: 2px 6px; border: 1px solid var(--figma-color-border); border-radius: 8px; color: var(--figma-color-text-secondary); font-size: 10px; white-space: nowrap; }
+    .selection-label { color: var(--figma-color-text-secondary); }
+    .selection-list { display: grid; min-width: 0; margin: 5px 0 0; padding: 0; list-style: none; }
+    .selection-list li { display: flex; min-width: 0; align-items: center; justify-content: space-between; gap: 8px; padding: 5px 0; border-bottom: 1px solid var(--figma-color-border); }
+    .selection-list li:last-child { border-bottom: 0; }
+    .selection-list strong { min-width: 0; overflow-wrap: anywhere; font-size: 13px; word-break: break-word; }
+    .selection-list span { flex: 0 0 auto; color: var(--figma-color-text-secondary); font-size: 10px; }
+    .selection-error { margin-top: 5px; color: var(--figma-color-text-warning); }
+    .primary-action { width: 100%; height: 38px; font-weight: 600; }
+    .status { flex: 0 0 auto; margin: 0 0 10px; padding: 8px 10px; border: 1px solid var(--figma-color-border); border-left: 3px solid var(--figma-color-border-brand-strong, var(--figma-color-border-brand)); border-radius: 4px; background: var(--figma-color-bg-tertiary); box-shadow: 0 3px 10px rgb(0 0 0 / 12%); }
+    .status.error { color: var(--figma-color-text-danger); border-color: var(--figma-color-icon-danger); border-left-width: 3px; background: var(--figma-color-bg-danger-tertiary); }
+    .status.success { color: var(--figma-color-text-success); border-color: var(--figma-color-icon-success); border-left-width: 3px; background: var(--figma-color-bg-success-tertiary); }
+    .adoption-meta { display: grid; gap: 4px; margin: 10px 0; }
+    .adoption-meta code { overflow: visible; overflow-wrap: anywhere; color: var(--figma-color-text); text-overflow: clip; white-space: normal; word-break: break-word; user-select: text; }
+    .adoption-detail-group { display: grid; gap: 6px; margin: 0 0 10px; }
+    .adoption-detail { overflow: hidden; border: 1px solid var(--figma-color-border); border-radius: 5px; background: var(--figma-color-bg); }
+    .adoption-detail > summary { min-height: 34px; padding: 0 9px; }
+    .adoption-detail > summary span:last-child { margin-left: auto; color: var(--figma-color-text-secondary); font-size: 10px; font-weight: 400; }
+    .adoption-detail[open] > summary { border-bottom: 1px solid var(--figma-color-border); }
+    .adoption-detail-list { display: grid; min-width: 0; margin: 0; padding: 0 9px 8px; list-style: none; }
+    .adoption-detail-list li { display: grid; min-width: 0; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: start; padding: 7px 0; border-bottom: 1px solid var(--figma-color-border); }
+    .adoption-detail-list li:last-child { padding-bottom: 0; border-bottom: 0; }
+    .adoption-detail-list code { overflow-wrap: anywhere; word-break: break-word; }
+    .adoption-detail-list li > span:last-child { color: var(--figma-color-text-secondary); font-size: 10px; white-space: nowrap; }
+    .adoption-detail-list .warning-item { grid-template-columns: minmax(0, 1fr); color: var(--figma-color-text); font-size: 11px; line-height: 1.45; }
+    .adoption-detail-list .warning-item > span:last-child { min-width: 0; overflow-wrap: anywhere; color: var(--figma-color-text); font-size: 11px; white-space: normal; word-break: break-word; }
+    .adoption-detail-list .empty-item { display: block; color: var(--figma-color-text-secondary); font-size: 10px; }
+    .adoption-empty { margin: 10px 0 0; padding: 9px 10px; border: 1px solid var(--figma-color-border-danger, var(--figma-color-icon-danger)); border-left: 3px solid var(--figma-color-icon-danger); border-radius: 5px; color: var(--figma-color-text-danger); background: var(--figma-color-bg-danger-tertiary); line-height: 1.45; opacity: 1; }
+    .stale-adoptions { margin-top: 10px; padding: 10px; border: 1px solid var(--figma-color-border-danger, var(--figma-color-icon-danger)); border-left: 3px solid var(--figma-color-icon-danger); border-radius: 5px; color: var(--figma-color-text-danger); background: var(--figma-color-bg-danger-tertiary); }
+    .stale-adoptions > strong { display: block; margin-bottom: 4px; }
+    .stale-adoptions > p { margin: 0; line-height: 1.45; }
+    .stale-adoption-list { display: grid; gap: 6px; margin: 8px 0; padding: 0; list-style: none; }
+    .stale-adoption-list li { display: grid; gap: 2px; padding-top: 6px; border-top: 1px solid var(--figma-color-border-danger, var(--figma-color-icon-danger)); }
+    .stale-adoption-list code { overflow-wrap: anywhere; color: var(--figma-color-text); word-break: break-word; }
+    .stale-adoption-list small { color: var(--figma-color-text-secondary); }
+    .stale-adoptions button { width: 100%; margin-top: 2px; color: var(--figma-color-text-danger); background: var(--figma-color-bg); border: 1px solid var(--figma-color-border-danger, var(--figma-color-icon-danger)); }
+    .adoption-complete { display: grid; gap: 9px; margin-top: 10px; }
+    .adoption-complete p { margin: 0; color: var(--figma-color-text-secondary); }
+    header, .connection, .workflow-tabs { flex: 0 0 auto; }
+    .workflow-content { flex: 1 1 auto; min-height: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Cocos Sync</h1>
+    <p class="subtitle">日常推送、Prefab 接管与共享素材 Catalog</p>
+  </header>
+
+  <div id="status" class="status" role="status" aria-live="polite">等待连接和选择同步目标</div>
+
+  <details id="connectionDetails" class="card connection" open>
+    <summary>
+      <span class="connection-title"><span id="dot" class="dot"></span><strong id="connection">未连接 Cocos</strong></span>
+      <span id="connectionSummary" class="connection-summary">需要配对</span>
+    </summary>
+    <div class="connection-body">
+      <p class="endpoint"><code id="endpoint">http://localhost:38638</code></p>
+      <div id="pairing">
+        <label for="pairCode">输入 Cocos 面板显示的配对码</label>
+        <div class="row">
+          <input id="pairCode" class="grow" maxlength="8" autocomplete="off" spellcheck="false">
+          <button id="pair">连接</button>
+        </div>
+      </div>
+      <div id="connectedActions" class="row between hidden">
+        <span>连接仅保存在本机 Figma 会话</span>
+        <button id="disconnect" class="secondary">断开</button>
+      </div>
+    </div>
+  </details>
+
+  <nav class="workflow-tabs" role="tablist" aria-label="工作流">
+    <button id="syncTab" type="button" role="tab" class="active" aria-selected="true" aria-controls="syncPanel">
+      <strong>同步到 Cocos</strong>
+      <span>手动选择 Frame / Component</span>
+    </button>
+    <button id="adoptionTab" type="button" role="tab" aria-selected="false" aria-controls="adoptionPanel">
+      <strong>创建 Figma 起点</strong>
+      <span>一次性导入 Prefab</span>
+    </button>
+    <button id="sharedAssetsTab" type="button" role="tab" aria-selected="false" aria-controls="sharedAssetsPanel">
+      <strong>共享素材</strong>
+      <span>更新唯一 Catalog</span>
+    </button>
+  </nav>
+
+  <main class="workflow-content">
+    <section id="syncPanel" class="workflow-panel" role="tabpanel" aria-labelledby="syncTab">
+      <section class="card">
+        <div class="section-heading">
+          <div>
+            <h2>选择要同步的内容</h2>
+            <p>支持单选或多选 Frame / Page 直属 Component；只推送明确选择的目标。</p>
+          </div>
+          <span class="badge">日常</span>
+        </div>
+        <div class="selection-label">当前选择</div>
+        <ul id="selectionList" class="selection-list"><li><strong>尚未选择</strong></li></ul>
+        <div id="selectionError" class="selection-error">请选择一个或多个 Frame / Component</div>
+      </section>
+      <button id="push" class="primary-action" disabled>推送所选内容到 Cocos</button>
+    </section>
+
+    <section id="adoptionPanel" class="workflow-panel hidden" role="tabpanel" aria-labelledby="adoptionTab">
+      <section class="card">
+        <div class="section-heading">
+          <div>
+            <h2>从现有 Prefab 创建起点</h2>
+            <p>先在 Cocos 的 Figma Sync 中准备 Prefab，再选择目标 Page 导入。</p>
+          </div>
+          <span class="badge">一次性</span>
+        </div>
+        <div id="staleAdoptions" class="stale-adoptions hidden" role="status" aria-live="polite">
+          <strong>检测到已删除或失效的导入节点</strong>
+          <p>这些映射属于当前 Figma 文件，但对应 Frame / Component 已不存在或 Item Component 不再位于 Page 直属层级。确认后清理映射，才能重新导入同一个 Prefab。</p>
+          <ul id="staleAdoptionList" class="stale-adoption-list"></ul>
+          <button id="releaseStaleAdoptions" type="button">确认清理失效映射</button>
+        </div>
+        <div id="adoptionReady" class="hidden">
+          <div class="adoption-meta">
+            <strong id="adoptionName"></strong>
+            <code id="adoptionPath"></code>
+            <span id="adoptionCounts"></span>
+          </div>
+          <div class="adoption-detail-group">
+            <details class="adoption-detail">
+              <summary><span>节点</span><span id="adoptionNodeCount">0 项</span></summary>
+              <ol id="adoptionNodes" class="adoption-detail-list"></ol>
+            </details>
+            <details class="adoption-detail">
+              <summary><span>图片</span><span id="adoptionAssetCount">0 项</span></summary>
+              <ol id="adoptionAssets" class="adoption-detail-list"></ol>
+            </details>
+            <details class="adoption-detail">
+              <summary><span>警告</span><span id="adoptionWarningCount">0 项</span></summary>
+              <ol id="adoptionWarnings" class="adoption-detail-list"></ol>
+            </details>
+          </div>
+          <label for="targetPage">目标 Page</label>
+          <select id="targetPage"></select>
+          <button id="importAdoption" class="primary-action">从 Cocos 导入</button>
+        </div>
+        <p id="adoptionEmpty" class="adoption-empty" role="status" aria-live="polite">连接 Cocos 后可读取一次性 Prefab 导入会话。</p>
+        <div id="adoptionComplete" class="adoption-complete hidden">
+          <p id="adoptionCompleteText"></p>
+          <button id="goToSync" class="secondary">转到日常同步</button>
+        </div>
+      </section>
+    </section>
+
+    <section id="sharedAssetsPanel" class="workflow-panel hidden" role="tabpanel" aria-labelledby="sharedAssetsTab">
+      <section class="card">
+        <div class="section-heading">
+          <div>
+            <h2>更新 DoomUI Shared Assets</h2>
+            <p>若当前文件还没有 Catalog Frame，则在当前 Page 创建；已有时直接复用其原位置。全文件只允许一个。</p>
+          </div>
+          <span class="badge">可增量</span>
+        </div>
+        <div id="sharedAssetsReady" class="hidden">
+          <div class="adoption-meta">
+            <strong>DoomUI Shared Assets</strong>
+            <span id="sharedAssetsCounts"></span>
+          </div>
+          <ol id="sharedAssetsList" class="adoption-detail-list"></ol>
+          <button id="importSharedAssets" class="primary-action">导入到 Shared Assets Catalog</button>
+        </div>
+        <p id="sharedAssetsEmpty" class="adoption-empty" role="status" aria-live="polite">连接 Cocos 后可读取共享素材会话。</p>
+        <div id="sharedAssetsComplete" class="adoption-complete hidden">
+          <p id="sharedAssetsCompleteText">Catalog 已更新；把其中 Component 或 Instance 放入界面即可复用 Cocos 原 SpriteFrame。</p>
+          <button id="sharedAssetsGoToSync" class="secondary">转到日常同步</button>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const elements = {
+      dot: document.getElementById('dot'),
+      connection: document.getElementById('connection'),
+      connectionSummary: document.getElementById('connectionSummary'),
+      connectionDetails: document.getElementById('connectionDetails'),
+      endpoint: document.getElementById('endpoint'),
+      pairing: document.getElementById('pairing'),
+      pairCode: document.getElementById('pairCode'),
+      pair: document.getElementById('pair'),
+      connectedActions: document.getElementById('connectedActions'),
+      disconnect: document.getElementById('disconnect'),
+      syncTab: document.getElementById('syncTab'),
+      adoptionTab: document.getElementById('adoptionTab'),
+      sharedAssetsTab: document.getElementById('sharedAssetsTab'),
+      syncPanel: document.getElementById('syncPanel'),
+      adoptionPanel: document.getElementById('adoptionPanel'),
+      sharedAssetsPanel: document.getElementById('sharedAssetsPanel'),
+      staleAdoptions: document.getElementById('staleAdoptions'),
+      staleAdoptionList: document.getElementById('staleAdoptionList'),
+      releaseStaleAdoptions: document.getElementById('releaseStaleAdoptions'),
+      adoptionReady: document.getElementById('adoptionReady'),
+      adoptionEmpty: document.getElementById('adoptionEmpty'),
+      adoptionComplete: document.getElementById('adoptionComplete'),
+      adoptionCompleteText: document.getElementById('adoptionCompleteText'),
+      adoptionName: document.getElementById('adoptionName'),
+      adoptionPath: document.getElementById('adoptionPath'),
+      adoptionCounts: document.getElementById('adoptionCounts'),
+      adoptionNodeCount: document.getElementById('adoptionNodeCount'),
+      adoptionAssetCount: document.getElementById('adoptionAssetCount'),
+      adoptionWarningCount: document.getElementById('adoptionWarningCount'),
+      adoptionNodes: document.getElementById('adoptionNodes'),
+      adoptionAssets: document.getElementById('adoptionAssets'),
+      adoptionWarnings: document.getElementById('adoptionWarnings'),
+      targetPage: document.getElementById('targetPage'),
+      importAdoption: document.getElementById('importAdoption'),
+      goToSync: document.getElementById('goToSync'),
+      sharedAssetsReady: document.getElementById('sharedAssetsReady'),
+      sharedAssetsEmpty: document.getElementById('sharedAssetsEmpty'),
+      sharedAssetsComplete: document.getElementById('sharedAssetsComplete'),
+      sharedAssetsCompleteText: document.getElementById('sharedAssetsCompleteText'),
+      sharedAssetsCounts: document.getElementById('sharedAssetsCounts'),
+      sharedAssetsList: document.getElementById('sharedAssetsList'),
+      importSharedAssets: document.getElementById('importSharedAssets'),
+      sharedAssetsGoToSync: document.getElementById('sharedAssetsGoToSync'),
+      selectionList: document.getElementById('selectionList'),
+      selectionError: document.getElementById('selectionError'),
+      push: document.getElementById('push'),
+      status: document.getElementById('status'),
+    };
+    let state = { connected: false };
+    let busy = false;
+    let activeWorkflow = 'sync';
+    let previousConnected = false;
+    let lastReadyAdoption = '';
+    let lastReadySharedAssets = '';
+    let lastStaleAdoptions = '';
+
+    function send(message) {
+      parent.postMessage({ pluginMessage: message }, '*');
+    }
+    function setStatus(message, kind = '') {
+      elements.status.textContent = message;
+      elements.status.className = `status ${kind}`;
+    }
+    function selectWorkflow(workflow) {
+      activeWorkflow = workflow;
+      const syncActive = workflow === 'sync';
+      const adoptionActive = workflow === 'adoption';
+      const sharedAssetsActive = workflow === 'shared-assets';
+      elements.syncTab.classList.toggle('active', syncActive);
+      elements.syncTab.setAttribute('aria-selected', String(syncActive));
+      elements.adoptionTab.classList.toggle('active', adoptionActive);
+      elements.adoptionTab.setAttribute('aria-selected', String(adoptionActive));
+      elements.sharedAssetsTab.classList.toggle('active', sharedAssetsActive);
+      elements.sharedAssetsTab.setAttribute('aria-selected', String(sharedAssetsActive));
+      elements.syncPanel.classList.toggle('hidden', !syncActive);
+      elements.adoptionPanel.classList.toggle('hidden', !adoptionActive);
+      elements.sharedAssetsPanel.classList.toggle('hidden', !sharedAssetsActive);
+    }
+    function detailItem(primary, secondary = '', className = '') {
+      const item = document.createElement('li');
+      if (className) item.className = className;
+      const content = document.createElement(className === 'warning-item' ? 'span' : 'code');
+      content.textContent = primary;
+      item.appendChild(content);
+      if (secondary) {
+        const detail = document.createElement('span');
+        detail.textContent = secondary;
+        item.appendChild(detail);
+      }
+      return item;
+    }
+    function renderDetailList(element, items, renderItem, emptyMessage) {
+      const children = items.length
+        ? items.map(renderItem)
+        : [detailItem(emptyMessage, '', 'empty-item')];
+      element.replaceChildren(...children);
+    }
+    function renderStaticEmptyReminder(element, visible, message) {
+      if (element.textContent !== message) element.textContent = message;
+      const hidden = !visible;
+      if (element.classList.contains('hidden') !== hidden) element.classList.toggle('hidden', hidden);
+    }
+    function render() {
+      if (state.connected !== previousConnected) {
+        elements.connectionDetails.open = !state.connected;
+        previousConnected = state.connected;
+      }
+      elements.dot.classList.toggle('online', state.connected);
+      elements.connection.textContent = state.connected ? '已连接 Cocos' : '未连接 Cocos';
+      elements.connectionSummary.textContent = state.connected ? '可用' : '需要配对';
+      elements.endpoint.textContent = state.endpoint || 'http://localhost:38638';
+      elements.pairing.classList.toggle('hidden', state.connected);
+      elements.connectedActions.classList.toggle('hidden', !state.connected);
+
+      const adoptionReady = state.connected && state.adoption && state.adoption.status === 'ready';
+      const adoptionImported = state.connected && state.adoption && state.adoption.status === 'imported';
+      const sharedAssetsReady = state.connected && state.sharedAssets && state.sharedAssets.status === 'ready';
+      const sharedAssetsImported = state.connected && state.sharedAssets && state.sharedAssets.status === 'imported';
+      const staleAdoptions = state.connected ? (state.staleAdoptions || []) : [];
+      if (adoptionReady && state.adoption.sessionId !== lastReadyAdoption) {
+        lastReadyAdoption = state.adoption.sessionId;
+        selectWorkflow('adoption');
+      }
+      if (sharedAssetsReady && state.sharedAssets.sessionId !== lastReadySharedAssets) {
+        lastReadySharedAssets = state.sharedAssets.sessionId;
+        selectWorkflow('shared-assets');
+      }
+      const staleSignature = staleAdoptions.map((binding) => `${binding.fileKey}:${binding.nodeId}`).join('|');
+      if (staleSignature && staleSignature !== lastStaleAdoptions) selectWorkflow('adoption');
+      lastStaleAdoptions = staleSignature;
+      elements.staleAdoptions.classList.toggle('hidden', !staleAdoptions.length);
+      elements.staleAdoptionList.replaceChildren(...staleAdoptions.map((binding) => {
+        const item = document.createElement('li');
+        const path = document.createElement('code');
+        path.textContent = binding.sourcePrefabUrl;
+        const location = document.createElement('small');
+        location.textContent = `${binding.fileName} · ${binding.nodeType} ${binding.nodeId}`;
+        item.append(path, location);
+        return item;
+      }));
+      elements.adoptionReady.classList.toggle('hidden', !adoptionReady);
+      elements.adoptionComplete.classList.toggle('hidden', !adoptionImported);
+      renderStaticEmptyReminder(
+        elements.adoptionEmpty,
+        !adoptionReady && !adoptionImported && !staleAdoptions.length,
+        state.connected
+          ? 'Cocos 当前没有待导入会话。请先在 Figma Sync 中填写 Prefab 路径并点击“准备导入”。'
+          : '连接 Cocos 后可读取一次性 Prefab 导入会话。',
+      );
+      if (adoptionReady) {
+        elements.adoptionName.textContent = state.adoption.prefabName;
+        elements.adoptionPath.textContent = state.adoption.prefabUrl;
+        const adoptionType = state.adoption.kind === 'item' ? 'Item Component' : 'UI Frame';
+        elements.adoptionCounts.textContent = `${adoptionType} · ${state.adoption.nodeCount} 个节点 · ${state.adoption.assetCount} 张图片 · ${state.adoption.warningCount} 个警告`;
+        elements.adoptionNodeCount.textContent = `${state.adoption.nodeCount} 项`;
+        elements.adoptionAssetCount.textContent = `${state.adoption.assetCount} 项`;
+        elements.adoptionWarningCount.textContent = `${state.adoption.warningCount} 项`;
+        const adoptionNodes = state.adoption.nodes || [];
+        const adoptionAssets = state.adoption.assets || [];
+        const adoptionWarnings = state.adoption.warnings || [];
+        renderDetailList(
+          elements.adoptionNodes,
+          adoptionNodes,
+          (node) => detailItem(node.path, node.kind === 'text' ? '文字' : (node.kind === 'sprite' ? '图片' : '容器')),
+          state.adoption.nodeCount ? '当前连接未提供节点明细，请重新加载 Figma Sync。' : '没有节点',
+        );
+        renderDetailList(
+          elements.adoptionAssets,
+          adoptionAssets,
+          (asset) => detailItem(asset.sourceUrl, `${asset.width} × ${asset.height}`),
+          state.adoption.assetCount ? '当前连接未提供图片明细，请重新加载 Figma Sync。' : '没有引用图片',
+        );
+        renderDetailList(
+          elements.adoptionWarnings,
+          adoptionWarnings,
+          (warning) => detailItem(warning, '', 'warning-item'),
+          state.adoption.warningCount ? '当前连接未提供警告明细，请重新加载 Figma Sync。' : '没有警告',
+        );
+        const selectedPage = elements.targetPage.value || state.currentPageId;
+        elements.targetPage.replaceChildren(...state.pages.map((page) => {
+          const option = document.createElement('option');
+          option.value = page.id;
+          option.textContent = page.name;
+          option.selected = page.id === selectedPage;
+          return option;
+        }));
+      } else if (adoptionImported) {
+        elements.adoptionCompleteText.textContent = state.adoption.kind === 'item'
+          ? `已导入 Item Component ${state.adoption.prefabName}；先备份程序逻辑，确认结果并删除旧 Item 双 Prefab 后，选择该 Component 使用“同步到 Cocos”重建。`
+          : `已导入 UI Frame ${state.adoption.prefabName}；后续更新请使用“同步到 Cocos”。`;
+      }
+
+      elements.sharedAssetsReady.classList.toggle('hidden', !sharedAssetsReady);
+      elements.sharedAssetsComplete.classList.toggle('hidden', !sharedAssetsImported);
+      renderStaticEmptyReminder(
+        elements.sharedAssetsEmpty,
+        !sharedAssetsReady && !sharedAssetsImported,
+        state.connected
+          ? 'Cocos 当前没有待导入的共享素材。请先在 Figma Sync 的“共享素材”中选择并准备。'
+          : '连接 Cocos 后可读取共享素材会话。',
+      );
+      if (sharedAssetsReady) {
+        elements.sharedAssetsCounts.textContent = `${state.sharedAssets.assetCount} 项 · 不存在时在当前 Page 创建 Catalog`;
+        renderDetailList(
+          elements.sharedAssetsList,
+          state.sharedAssets.assets || [],
+          (asset) => detailItem(asset.sourceUrl, `${asset.width} × ${asset.height}${asset.sliced ? ' · 九宫格' : ''}`),
+          '没有共享素材',
+        );
+      } else if (sharedAssetsImported) {
+        const catalog = state.sharedAssets.importedCatalog;
+        elements.sharedAssetsCompleteText.textContent = catalog
+          ? `已更新 ${catalog.fileName} 中唯一的 DoomUI Shared Assets Catalog；后续界面可复用其中 Component。`
+          : 'Catalog 已更新；后续界面可复用其中 Component。';
+      }
+
+      const selections = state.selections || [];
+      elements.selectionList.replaceChildren(...(selections.length ? selections.map((selection) => {
+        const item = document.createElement('li');
+        const name = document.createElement('strong');
+        name.textContent = selection.name;
+        const type = document.createElement('span');
+        type.textContent = selection.type === 'FRAME' ? 'UI Frame' : 'Item Component';
+        item.append(name, type);
+        return item;
+      }) : [detailItem('尚未选择', '', 'empty-item')]));
+      elements.selectionError.textContent = state.selectionError || '';
+      elements.selectionError.classList.toggle('hidden', !state.selectionError);
+      elements.push.disabled = busy || !state.connected || !selections.length || Boolean(state.selectionError);
+      elements.importAdoption.disabled = busy || !adoptionReady;
+      elements.importSharedAssets.disabled = busy || !sharedAssetsReady;
+      elements.releaseStaleAdoptions.disabled = busy || !staleAdoptions.length;
+      elements.pair.disabled = busy || !elements.pairCode.value.trim();
+      selectWorkflow(activeWorkflow);
+    }
+
+    function openWorkflow(workflow) {
+      selectWorkflow(workflow);
+      send({ type: 'refresh-workflow', workflow });
+    }
+    elements.syncTab.addEventListener('click', () => openWorkflow('sync'));
+    elements.adoptionTab.addEventListener('click', () => openWorkflow('adoption'));
+    elements.sharedAssetsTab.addEventListener('click', () => openWorkflow('shared-assets'));
+    elements.goToSync.addEventListener('click', () => selectWorkflow('sync'));
+    elements.sharedAssetsGoToSync.addEventListener('click', () => selectWorkflow('sync'));
+    elements.pairCode.addEventListener('input', render);
+    elements.pairCode.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' && elements.pairCode.value.trim()) send({ type: 'pair', code: elements.pairCode.value });
+    });
+    elements.pair.addEventListener('click', () => send({ type: 'pair', code: elements.pairCode.value }));
+    elements.disconnect.addEventListener('click', () => send({ type: 'disconnect' }));
+    elements.importAdoption.addEventListener('click', () => send({ type: 'import-adoption', pageId: elements.targetPage.value }));
+    elements.importSharedAssets.addEventListener('click', () => send({ type: 'import-shared-assets' }));
+    elements.releaseStaleAdoptions.addEventListener('click', () => send({ type: 'release-stale-adoptions' }));
+    elements.push.addEventListener('click', () => send({ type: 'push' }));
+
+    onmessage = (event) => {
+      const message = event.data.pluginMessage;
+      if (!message) return;
+      if (message.type === 'state') {
+        state = message.state;
+        render();
+      } else if (message.type === 'busy') {
+        busy = Boolean(message.busy);
+        if (message.message) setStatus(message.message);
+        render();
+      } else if (message.type === 'result') {
+        elements.pairCode.value = '';
+        setStatus(message.message, 'success');
+        render();
+      } else if (message.type === 'error') {
+        setStatus(message.message, 'error');
+        render();
+      }
+    };
+
+    send({ type: 'init' });
+    render();
+  </script>
+</body>
+</html>

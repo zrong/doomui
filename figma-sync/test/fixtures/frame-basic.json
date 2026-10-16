@@ -1,0 +1,33 @@
+{
+  "id": "10:1",
+  "name": "Login Panel",
+  "type": "FRAME",
+  "absoluteBoundingBox": { "x": 100, "y": 50, "width": 200, "height": 100 },
+  "children": [
+    {
+      "id": "10:2",
+      "name": "bg @9slice{l:4,r:4,t:4,b:4}",
+      "type": "RECTANGLE",
+      "absoluteBoundingBox": { "x": 110, "y": 60, "width": 180, "height": 80 },
+      "constraints": { "horizontal": "LEFT_RIGHT", "vertical": "TOP_BOTTOM" },
+      "fills": [{ "type": "SOLID", "color": { "r": 0.2, "g": 0.4, "b": 0.6 } }]
+    },
+    {
+      "id": "10:3",
+      "name": "Title",
+      "type": "TEXT",
+      "characters": "Doom UI",
+      "absoluteBoundingBox": { "x": 150, "y": 75, "width": 100, "height": 24 },
+      "constraints": { "horizontal": "CENTER", "vertical": "TOP" },
+      "fills": [{ "type": "SOLID", "color": { "r": 1, "g": 1, "b": 1 } }],
+      "style": {
+        "fontFamily": "Inter",
+        "fontStyle": "Regular",
+        "fontSize": 18,
+        "lineHeightPx": 22,
+        "textAlignHorizontal": "CENTER",
+        "textAlignVertical": "CENTER"
+      }
+    }
+  ]
+}

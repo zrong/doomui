@@ -1,0 +1,89 @@
+{
+  "id": "20:1",
+  "name": "Button Fixture",
+  "type": "FRAME",
+  "absoluteBoundingBox": { "x": 0, "y": 0, "width": 640, "height": 360 },
+  "children": [
+    {
+      "id": "20:10",
+      "name": "Button/Primary",
+      "type": "COMPONENT_SET",
+      "absoluteBoundingBox": { "x": 0, "y": 400, "width": 360, "height": 80 },
+      "children": [
+        {
+          "id": "20:11",
+          "name": "State=Default, Size=Large",
+          "type": "COMPONENT",
+          "componentSetId": "20:10",
+          "absoluteBoundingBox": { "x": 0, "y": 400, "width": 100, "height": 40 },
+          "componentProperties": {
+            "State#20:10": { "type": "VARIANT", "value": "Default" },
+            "Size#20:10": { "type": "VARIANT", "value": "Large" }
+          },
+          "children": [{
+            "id": "20:111",
+            "name": "bg",
+            "type": "RECTANGLE",
+            "absoluteBoundingBox": { "x": 0, "y": 400, "width": 100, "height": 40 },
+            "fills": [{ "type": "SOLID", "color": { "r": 0.1, "g": 0.2, "b": 0.8 } }]
+          }]
+        },
+        {
+          "id": "20:12",
+          "name": "State=Hover, Size=Large",
+          "type": "COMPONENT",
+          "componentSetId": "20:10",
+          "absoluteBoundingBox": { "x": 120, "y": 400, "width": 100, "height": 40 },
+          "componentProperties": {
+            "State#20:10": { "type": "VARIANT", "value": "Hover" },
+            "Size#20:10": { "type": "VARIANT", "value": "Large" }
+          },
+          "children": [{
+            "id": "20:121",
+            "name": "bg",
+            "type": "RECTANGLE",
+            "absoluteBoundingBox": { "x": 120, "y": 400, "width": 100, "height": 40 },
+            "fills": [{ "type": "SOLID", "color": { "r": 0.2, "g": 0.4, "b": 1 } }]
+          }]
+        },
+        {
+          "id": "20:13",
+          "name": "State=Pressed, Size=Large",
+          "type": "COMPONENT",
+          "componentSetId": "20:10",
+          "absoluteBoundingBox": { "x": 240, "y": 400, "width": 100, "height": 40 },
+          "componentProperties": {
+            "State#20:10": { "type": "VARIANT", "value": "Pressed" },
+            "Size#20:10": { "type": "VARIANT", "value": "Large" }
+          },
+          "children": [{
+            "id": "20:131",
+            "name": "bg",
+            "type": "RECTANGLE",
+            "absoluteBoundingBox": { "x": 240, "y": 400, "width": 100, "height": 40 },
+            "fills": [{ "type": "SOLID", "color": { "r": 0.05, "g": 0.1, "b": 0.5 } }]
+          }]
+        }
+      ]
+    },
+    {
+      "id": "20:20",
+      "name": "btn_play",
+      "type": "INSTANCE",
+      "componentId": "20:11",
+      "componentSetId": "20:10",
+      "absoluteBoundingBox": { "x": 270, "y": 160, "width": 100, "height": 40 },
+      "componentProperties": {
+        "State#20:10": { "type": "VARIANT", "value": "Default" },
+        "Size#20:10": { "type": "VARIANT", "value": "Large" }
+      },
+      "children": [{
+        "id": "I20:20;20:111",
+        "name": "bg",
+        "type": "RECTANGLE",
+        "absoluteBoundingBox": { "x": 270, "y": 160, "width": 100, "height": 40 },
+        "fills": [{ "type": "SOLID", "color": { "r": 0.1, "g": 0.2, "b": 0.8 } }]
+      }]
+    }
+  ]
+}

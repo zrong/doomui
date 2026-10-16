@@ -1,0 +1,19 @@
+{
+  "name": "cocos-sync",
+  "version": "26.36.28",
+  "private": true,
+  "description": "Figma Desktop companion plugin for one-time Cocos Prefab adoption and selected Frame push.",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "watch": "node scripts/build.mjs --watch",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "check": "npm run typecheck && npm run build"
+  },
+  "devDependencies": {
+    "@figma/plugin-typings": "1.136.0",
+    "esbuild": "0.28.2",
+    "typescript": "7.0.2"
+  },
+  "author": "zrong",
+  "license": "MIT"
+}

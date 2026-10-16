@@ -1,0 +1,175 @@
+{
+  "package_version": 2,
+  "name": "figma-sync",
+  "version": "26.36.28",
+  "description": "Sync a Figma Frame into Cocos Creator 3.8.6 visual and logic prefabs.",
+  "author": "zrong",
+  "main": "./dist/main.js",
+  "editor": ">=3.8.6 <3.9.0",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "watch": "tsc -p tsconfig.json -w",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check": "npm run build && npm test"
+  },
+  "dependencies": {
+    "fs-extra": "^11.2.0",
+    "sharp": "^0.33.5",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@cocos/creator-types": "3.8.6",
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^20.17.0",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.8"
+  },
+  "panels": {
+    "default": {
+      "title": "Figma Sync",
+      "type": "dockable",
+      "main": "dist/panels/default",
+      "size": {
+        "min-width": 480,
+        "min-height": 560,
+        "width": 720,
+        "height": 820
+      }
+    }
+  },
+  "contributions": {
+    "menu": [
+      {
+        "path": "i18n:menu.extension/DoomUI",
+        "label": "Figma Sync",
+        "message": "open-panel"
+      }
+    ],
+    "scene": {
+      "script": "./dist/scene.js"
+    },
+    "profile": {
+      "project": {
+        "settings": {
+          "default": {
+            "schemaVersion": 8,
+            "bundleRoot": "",
+            "sharedTextureRoots": [],
+            "fontMap": {},
+            "frames": {},
+            "adoptions": {},
+            "sharedAssetCatalogs": {},
+            "pendingOrphans": []
+          }
+        }
+      }
+    },
+    "messages": {
+      "open-panel": {
+        "methods": [
+          "openPanel"
+        ]
+      },
+      "load-settings": {
+        "methods": [
+          "loadSettings"
+        ]
+      },
+      "save-settings": {
+        "methods": [
+          "saveSettings"
+        ]
+      },
+      "apply-sync": {
+        "methods": [
+          "applySync"
+        ]
+      },
+      "cancel-preview": {
+        "methods": [
+          "cancelPreview"
+        ]
+      },
+      "get-last-report": {
+        "methods": [
+          "getLastReport"
+        ]
+      },
+      "get-orphan-cleanup-status": {
+        "methods": [
+          "getOrphanCleanupStatus"
+        ]
+      },
+      "get-managed-sync-targets": {
+        "methods": [
+          "getManagedSyncTargets"
+        ]
+      },
+      "retire-managed-sync-target": {
+        "methods": [
+          "retireManagedSyncTarget"
+        ]
+      },
+      "discover-legacy-orphans": {
+        "methods": [
+          "discoverLegacyOrphans"
+        ]
+      },
+      "cleanup-orphans": {
+        "methods": [
+          "cleanupOrphans"
+        ]
+      },
+      "get-push-status": {
+        "methods": [
+          "getPushStatus"
+        ]
+      },
+      "reset-push-pairing": {
+        "methods": [
+          "resetPushPairing"
+        ]
+      },
+      "get-current-adoption-prefab-url": {
+        "methods": [
+          "getCurrentAdoptionPrefabUrl"
+        ]
+      },
+      "scene:ready": {
+        "methods": [
+          "handleSceneReady"
+        ]
+      },
+      "figma-sync:adoption-prefab-context-changed": {
+        "public": false
+      },
+      "create-cocos-adoption": {
+        "methods": [
+          "createCocosAdoption"
+        ]
+      },
+      "cancel-cocos-adoption": {
+        "methods": [
+          "cancelCocosAdoption"
+        ]
+      },
+      "get-current-shared-asset-selection": {
+        "methods": [
+          "getCurrentSharedAssetSelection"
+        ]
+      },
+      "create-shared-asset-catalog": {
+        "methods": [
+          "createSharedAssetCatalog"
+        ]
+      },
+      "cancel-shared-asset-catalog": {
+        "methods": [
+          "cancelSharedAssetCatalog"
+        ]
+      }
+    }
+  },
+  "license": "MIT"
+}

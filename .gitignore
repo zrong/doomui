@@ -1,0 +1,54 @@
+# macOS / editors
+.DS_Store
+._*
+.idea/
+.vscode/
+*.swp
+*~
+
+# Node.js
+**/node_modules/
+**/dist/
+**/coverage/
+**/*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Logs and temporary files
+*.log
+logs/
+temp/
+.temp/
+*.tmp
+*.bak
+
+# Local secrets and environment
+.env
+.env.*
+!.env.example
+
+# Cocos Creator generated state
+figma-ui-sync-sandbox/library/
+figma-ui-sync-sandbox/temp/
+figma-ui-sync-sandbox/profiles/
+figma-ui-sync-sandbox/local/
+figma-ui-sync-sandbox/logs/
+figma-ui-sync-sandbox/build/
+figma-ui-sync-sandbox/extensions/figma-sync
+
+# Generated sync output and project mapping from real designs
+figma-ui-sync-sandbox/assets/figma-ui/
+figma-ui-sync-sandbox/assets/figma-ui.meta
+figma-ui-sync-sandbox/settings/v2/packages/figma-sync.json
+figma-ui-sync-sandbox/settings/v2/packages/figma-ui-sync.json
+
+# Agent/worktree local state
+.claude/
+.qoder/
+.serena/
+.worktrees/
+
+# Creator local splash and service state
+figma-ui-sync-sandbox/settings/v2/packages/information.json
+figma-ui-sync-sandbox/settings/v2/packages/cocos-service.json
