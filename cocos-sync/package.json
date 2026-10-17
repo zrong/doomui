@@ -1,6 +1,6 @@
 {
   "name": "cocos-sync",
-  "version": "26.36.28",
+  "version": "26.42.29",
   "private": true,
   "description": "Figma Desktop companion plugin for one-time Cocos Prefab adoption and selected Frame push.",
   "scripts": {
