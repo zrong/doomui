@@ -268,6 +268,13 @@ describe('Cocos panel information architecture', () => {
 });
 
 describe('Figma companion information architecture', () => {
+  it('permits only the paired local endpoint in Community and development builds', () => {
+    expect(companionManifest.networkAccess.allowedDomains).toEqual(['http://localhost:38638']);
+    expect(companionManifest.networkAccess.devAllowedDomains).toEqual(['http://localhost:38638']);
+    expect(companionManifest.networkAccess.reasoning).toContain('paired');
+    expect(companionManifest.enablePrivatePluginApi).not.toBe(true);
+  });
+
   it('uses the Cocos Sync title in the manifest and UI', () => {
     expect(companionPackage.name).toBe('cocos-sync');
     expect(companionManifest.name).toBe('Cocos Sync');

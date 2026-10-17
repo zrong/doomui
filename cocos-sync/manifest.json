@@ -6,9 +6,9 @@
   "ui": "dist/ui.html",
   "editorType": ["figma"],
   "documentAccess": "dynamic-page",
-  "enablePrivatePluginApi": true,
   "networkAccess": {
-    "allowedDomains": ["none"],
+    "allowedDomains": ["http://localhost:38638"],
+    "reasoning": "Connects only to the paired Figma Sync extension in Cocos Creator on this computer to exchange selected design structures and required images. No external service or analytics.",
     "devAllowedDomains": ["http://localhost:38638"]
   }
 }

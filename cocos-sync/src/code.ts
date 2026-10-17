@@ -19,6 +19,7 @@ import {
   type PushAssetRequest,
   type PushPrepareResult,
 } from './protocol';
+import { resolveSourceFileKey, resolveSourceUrl } from './file-identity';
 
 interface PluginState {
   connected: boolean;
@@ -771,26 +772,12 @@ async function disconnectSession(): Promise<void> {
   await clearSession();
 }
 
-function makeLocalFileId(): string {
-  const existing = figma.root.getPluginData(LOCAL_FILE_ID_KEY);
-  if (existing) return existing;
-  const generated = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`;
-  try {
-    figma.root.setPluginData(LOCAL_FILE_ID_KEY, generated);
-  } catch {
-    return `name-${figma.root.name}`;
-  }
-  return generated;
-}
-
 function sourceFileKey(): string {
-  return figma.fileKey || `local-${makeLocalFileId()}`;
+  return resolveSourceFileKey(figma);
 }
 
 function sourceUrl(fileKey: string, node: FrameNode | ComponentNode): string | undefined {
-  if (!/^[A-Za-z0-9_-]+$/.test(fileKey)) return undefined;
-  const nodeId = node.id.replace(/:/g, '-');
-  return `https://www.figma.com/design/${fileKey}/${encodeURIComponent(figma.root.name)}?node-id=${nodeId}`;
+  return resolveSourceUrl(fileKey, figma.root.name, node.id);
 }
 
 function extractRestExport(raw: RestExport, nodeId: string): {

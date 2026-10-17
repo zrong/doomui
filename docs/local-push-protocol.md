@@ -8,7 +8,9 @@
 - Figma 请求基址：`http://localhost:38638`
 - 传输范围：同一台电脑上的 Figma Desktop 与 Cocos Creator
 
-`localhost` 用于满足 Figma 开发插件的网络白名单；Cocos 服务器仍只绑定 IPv4 回环地址，不对局域网或公网监听。
+`localhost` 用于满足 Figma 插件的网络白名单；发布版 `allowedDomains` 与开发版 `devAllowedDomains` 都只允许 `http://localhost:38638`，manifest 同时说明用途。Cocos 服务器仍只绑定 IPv4 回环地址，不对局域网或公网监听。
+
+Community 插件不启用私有 Plugin API。当前环境不提供 `figma.fileKey`（包括 getter 拒绝访问）时，沿用既有 plugin-data key 持久化的 `local-` 文件标识；该标识不是可访问的云文件 key，`normalizedUrl` 此时省略。JSON_REST_V1 结构仍通过公开的 `exportAsync` API 导出，不产生 Figma REST 请求。既有开发插件若曾使用私有云文件 key，其项目映射与 Community 的本地标识可能不同；切换前应备份并核对映射，不能自动覆盖原资源。
 
 协议产品名统一为 **Cocos Sync 本机协议**。Figma → Cocos Push 只是协议内的日常同步操作；同一协议还承载配对、连接确认、一次性 Cocos Prefab → Figma 接管和 Shared Assets Catalog 更新，因此不把整套协议称为 “Cocos Push 协议”。
 

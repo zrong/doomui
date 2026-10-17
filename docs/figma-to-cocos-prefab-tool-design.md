@@ -181,6 +181,8 @@ Transition target 优先根 Sprite，否则选择唯一名为 `bg` 或 `backgrou
 
 ## 6. 本机协议与资源传输
 
+Community 发布版与开发版都只允许访问 `http://localhost:38638`，并在 manifest 声明本机设计同步用途。Community 不启用私有 Plugin API，结构继续由公开 `exportAsync({ format: 'JSON_REST_V1' })` 提供。私有 `figma.fileKey` 不可用时，沿用既有 plugin-data key 的 `local-` 标识；此时不生成 `normalizedUrl`。切换自使用云文件 key 的开发版时，应显式核对项目映射，不自动迁移或覆盖现有资源。
+
 伴生插件先上传 `JSON_REST_V1` 结构，Cocos 返回真正需要更新的 raster/image-fill 清单，Figma 再以二进制方式上传这些资源；未变化且本地仍存在的贴图不会重复导出。这里的格式名不代表网络 REST 调用，DoomUI 不持有 PAT，也不消耗 Figma REST API 额度。
 
 本机服务使用八位配对码换取随机会话令牌；令牌保存在 Figma `clientStorage`，服务重载后失效。服务只绑定回环地址，限制 JSON 和单资源体积，接收完成后只生成 Preview，不自动 Apply。

@@ -1,5 +1,7 @@
 # Figma UI 制作规范
 
+Community 版仍使用公开 Plugin API 的 `JSON_REST_V1` 导出设计结构。所选目标与图片只发送给同机已配对的 Cocos 扩展；目标范围、节点命名、布局和资源所有权规则与开发版相同。云文件 key 不可读时，以文档 plugin-data 中的本地文件标识维持映射，不生成伪造的 Figma 云文件链接。
+
 这份规范面向需要被 DoomUI 同步到 Cocos Creator 3.8.6 的设计文件。遵循规范可以保留更多语义，并减少整块栅格化和 Button 状态降级。
 
 ## Frame 与容器
