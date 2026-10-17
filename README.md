@@ -46,6 +46,7 @@ Cocos 扩展的内部包名也已统一为 `figma-sync`。首次加载会把旧 
 | [版本与发布](docs/versioning.md) | `YY.WW.MICRO`、版本文件和 Git Tag 同步规则 |
 | [详细设计](docs/figma-to-cocos-prefab-tool-design.md) | 映射、diff、事务和第一版边界 |
 | [验收记录](docs/acceptance.md) | 自动化与 Cocos/Figma 运行态证据 |
+| [Community 发布](docs/community/publishing.md) | 插件介绍、图标、封面、数据披露与发布流程 |
 
 ## 当前边界
 

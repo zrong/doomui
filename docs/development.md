@@ -199,7 +199,7 @@ npm pack ./figma-sync --dry-run --json
 ### Figma 提示无法连接 Cocos
 
 - 确认打开的是 Cocos Creator 3.8.6 工程，并在“Desktop 连接”中确认本机服务已启动。
-- 确认已提交 `manifest.json` 的 `devAllowedDomains` 包含 `http://localhost:38638`。
+- 确认已提交 `manifest.json` 的发布版 `allowedDomains` 和开发版 `devAllowedDomains` 都只允许 `http://localhost:38638`；只配置开发版白名单会使 Community 安装版连接失败。
 - 扩展刚重载时旧 token 已失效，清除配对并使用新码。
 
 ### Figma Development 菜单里看不到 Cocos Sync
@@ -226,3 +226,7 @@ npm pack ./figma-sync --dry-run --json
 - 点击场景编辑器左上角的 `2D` 按钮切换到 UI 编辑视图。
 - 天空或网格是编辑器视图背景，不是 Figma Sync 生成的 3D 资源，不需要删除 Camera 或场景节点来“清理”它。
 - 检查生成结果时，可以在资源管理器中双击 `prefabs/view/figma/*.root.prefab` 或 `prefabs/item/figma/*.root.prefab` 单独打开视觉 Prefab；需要验证逻辑外壳时再打开或实例化 `prefabs/view/*.prefab`、`prefabs/item/*.prefab`。
+
+## Figma Community 发布
+
+发布介绍、图标、封面和数据披露清单见 [Community 发布资料](community/publishing.md)。发布前运行 `just check`，确认本机导入的 manifest 指向当前公开仓库，而非移动前的旧路径。必须沿用已提交的 plugin ID。

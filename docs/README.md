@@ -12,6 +12,7 @@
 6. [版本与发布](versioning.md)：CalVer、原子提交、Tag 和版本一致性。
 7. [验收记录](acceptance.md)：区分自动化、宿主运行态与剩余外部验收。
 8. [第三方依赖说明](third-party.md)：源码许可证、运行依赖和二进制分发边界。
+9. [Community 发布](community/publishing.md)：公开介绍、发布图片、数据用途与发布前检查。
 
 ## 文档维护边界
 
