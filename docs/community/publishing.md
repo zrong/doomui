@@ -6,8 +6,15 @@
 - 固定 plugin ID：`1675173114763421112`
 - 源码与安装说明：[zrong/doomui](https://github.com/zrong/doomui)
 - 支持：[GitHub Issues](https://github.com/zrong/doomui/issues)
+- 安全政策：[SECURITY.md](https://github.com/zrong/doomui/blob/master/SECURITY.md)
 - 许可证：MIT
 - 当前发布候选版本以根 `VERSION` 为准；Figma 的发布审核状态需在 Desktop / Community 页面单独确认。
+
+## 发布状态（2026-10-17）
+
+- 已向 Figma 提交 Cocos Sync 的首次 Community 发布申请，对应源码版本 `26.42.29`。
+- [Community 插件页面](https://www.figma.com/community/plugin/1675173114763421112/cocos-sync)已创建，作者为 HucheAI，Community 版本为 1。Figma 明确显示已收到申请、等待审核，审核期间页面仅作者可见；此记录不代表已经公开上架。
+- 介绍、原创图标与封面、分类、标签、数据安全披露和 GitHub 支持地址均已提交。公开安装后的运行态验证仍按[验收记录](../acceptance.md)单独完成。
 
 ## Tagline
 
