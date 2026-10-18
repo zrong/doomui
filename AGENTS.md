@@ -4,7 +4,7 @@
 
 ## 项目边界
 
-- `figma-sync/` 是 Cocos Creator 3.8.6 扩展，包名和标题固定为 **Figma Sync**，入口固定为 `扩展 → DoomUI → Figma Sync`。
+- `figma-sync/` 是 Cocos Creator 扩展，包名和标题固定为 **Figma Sync**，入口固定为 `扩展 → DoomUI → Figma Sync`。
 - `cocos-sync/` 是 Figma Desktop 伴生插件，npm 包名和标题固定为 **Cocos Sync**。
 - `sandbox/` 用于 Cocos Creator 3.8.6 的公开演示与扩展验收；公开离线 Fixture 随仓库提交，实际游戏工程保持独立。
 - 设计、协议、制作规范、开发和验收文档统一放在 `docs/`；子项目 README 只保留该项目的最短入口说明。
@@ -24,7 +24,7 @@
 
 - 根级命令以 `justfile` 为统一入口；先运行 `just --list`，提交前运行 `just check`。
 - 两个插件保留各自的 npm 命令，根命令只是稳定编排层，不应复制实现逻辑。
-- Cocos 宿主版本固定为 3.8.6，扩展声明范围保持 `>=3.8.6 <3.9.0`。
+- Cocos 兼容范围为 `>=3.8.6 <3.9.0`，运行态验收基线为 3.8.6；对外说明须区分兼容范围与已实测版本。
 - 修改本机 Push 请求/响应时，同时更新两端类型、自动测试和 `docs/local-push-protocol.md`。
 - 修改 Figma→Cocos 映射时，同时更新测试、`docs/figma-authoring-guide.md` 和详细设计文档。
 

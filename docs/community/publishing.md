@@ -4,6 +4,7 @@
 
 - 名称：Cocos Sync
 - 固定 plugin ID：`1675173114763421112`
+- 官方网站：[DoomUI](https://zengrong.net/project/doomui/)
 - 源码与安装说明：[zrong/doomui](https://github.com/zrong/doomui)
 - 支持：[GitHub Issues](https://github.com/zrong/doomui/issues)
 - 安全政策：[SECURITY.md](https://github.com/zrong/doomui/blob/master/SECURITY.md)
@@ -22,7 +23,7 @@ Push selected Figma designs to Cocos Creator prefabs.
 
 ## Description
 
-Cocos Sync is the Figma Desktop companion plugin for DoomUI, an open-source UI workflow for Cocos Creator 3.8.6.
+Cocos Sync is the Figma Desktop companion plugin for DoomUI, an open-source UI workflow for Cocos Creator (>=3.8.6 <3.9.0). Runtime validation currently covers macOS, Figma Desktop, and Creator 3.8.6; other patch versions in this range have not been individually validated.
 
 - Push only the Frames or top-level Components you select.
 - Preview changes in Creator before explicitly applying them.
@@ -38,7 +39,7 @@ Source code and support: https://github.com/zrong/doomui
 
 License: MIT
 
-中文：DoomUI 的 Figma Desktop 伴生插件。手动推送所选 Frame / Page 直属 Component，在 Cocos Creator 中先 Preview，再明确 Apply。支持现有 Prefab 的一次性设计接管与共享素材复用。需要同机运行 Cocos Creator 3.8.6 和 Figma Sync 扩展。
+中文：DoomUI 的 Figma Desktop 伴生插件。手动推送所选 Frame / Page 直属 Component，在 Cocos Creator 中先 Preview，再明确 Apply。支持现有 Prefab 的一次性设计接管与共享素材复用。需要同机运行 Cocos Creator（兼容范围 `>=3.8.6 <3.9.0`）和 Figma Sync 扩展。当前运行态验收基线为 macOS + Figma Desktop + Creator 3.8.6，范围内其他补丁版本尚未逐一验收。
 
 ## 图片
 

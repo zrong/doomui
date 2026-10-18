@@ -203,7 +203,7 @@ Cocos 将映射标记为已释放，但不删除或修改任何工程资产。�
 
 该字段只表示受支持的横向/纵向子集。禁用的 `cc.Layout` 不返回该字段；Grid、反向排列、`ResizeMode.CHILDREN`、非居中或两侧 Padding 不相等的交叉轴、受缩放影响或含非固定直接子节点的布局只返回绝对坐标并进入 `warnings`。
 
-协议 v5 为文字节点增加可选描边字段。Cocos 3.8.6 的 `Label.enableOutline`，以及旧 Prefab 中仍存在的独立 `cc.LabelOutline` 组件，都会导入为 Figma Text 的单色 `strokes` 和 `strokeWeight`：
+协议 v5 为文字节点增加可选描边字段。兼容范围 `>=3.8.6 <3.9.0` 内的 `Label.enableOutline`，以及旧 Prefab 中仍存在的独立 `cc.LabelOutline` 组件，都会导入为 Figma Text 的单色 `strokes` 和 `strokeWeight`：
 
 ```json
 {

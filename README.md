@@ -1,6 +1,10 @@
 # DoomUI
 
-DoomUI 是一套面向 Cocos Creator 3.8.6 的 Figma UI 同步工具链。现有 Cocos Prefab 可通过一次性导入建立设计起点，没有 Prefab 的通用 SpriteFrame 可导入 Figma Shared Assets Catalog；频繁迭代时由 Figma Desktop 插件把当前明确选择的一个或多个 Frame / Component 推送给 Cocos。
+DoomUI 是一套连接 Figma 与 Cocos Creator 的开源 UI 工具链。设计师在 Figma 中调整界面，手动推送所选设计；程序员在 Cocos 中预览变更，确认后生成或更新 Prefab，让设计迭代进入游戏工程。
+
+兼容范围：Cocos Creator `>=3.8.6 <3.9.0`。当前已在 macOS + Figma Desktop + Creator 3.8.6 完成运行态验证，范围内其他补丁版本尚未逐一验收。
+
+[DoomUI 官方网站](https://zengrong.net/project/doomui/) · [GitHub 源码](https://github.com/zrong/doomui)
 
 ## 子项目
 
@@ -12,7 +16,7 @@ DoomUI 是一套面向 Cocos Creator 3.8.6 的 Figma UI 同步工具链。现有
 
 ## 快速开始
 
-前置要求：macOS、Node.js 18+、Cocos Creator 3.8.6、Figma Desktop。推荐安装 [`just`](https://just.systems/) 作为根级命令入口。
+前置要求：macOS、Node.js 18+、Cocos Creator `>=3.8.6 <3.9.0`、Figma Desktop。推荐安装 [`just`](https://just.systems/) 作为根级命令入口。仓库中的 Sandbox 使用 Creator 3.8.6 保存。
 
 ```bash
 just install

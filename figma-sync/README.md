@@ -1,6 +1,6 @@
 # Figma Sync
 
-Cocos Creator 3.8.6 扩展，菜单入口为 `扩展 → DoomUI → Figma Sync`。接收 Cocos Sync 的手动 Desktop Push，提供 Preview、Apply 与一次性 Prefab 接管。
+Cocos Creator 扩展，兼容范围为 `>=3.8.6 <3.9.0`，已在 3.8.6 完成运行态验证。菜单入口为 `扩展 → DoomUI → Figma Sync`。接收 Cocos Sync 的手动 Desktop Push，提供 Preview、Apply 与一次性 Prefab 接管。
 
 在仓库根运行 `just install`、`just check` 和 `just sandbox-link` 后，用 Creator 打开验收工程。
 

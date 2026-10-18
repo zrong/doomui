@@ -1,12 +1,12 @@
 # Figma Sync 开发指导
 
-本目录是 Cocos Creator 3.8.6 扩展。除本文件外，同时遵循仓库根 `AGENTS.md`。
+本目录是 Cocos Creator 扩展。除本文件外，同时遵循仓库根 `AGENTS.md`。
 
 ## 稳定身份与入口
 
 - 包名和面板标题固定为 `figma-sync` / `Figma Sync`。
 - 菜单父路径固定为 `i18n:menu.extension/DoomUI`，叶子 `label` 固定为 `Figma Sync`；用户看到的是 `扩展 → DoomUI → Figma Sync`。不要把叶子名重复写进 `path`，否则运行态会多一层同名子菜单。
-- Cocos 版本范围固定为 `>=3.8.6 <3.9.0`；不要在未验收时扩大兼容范围。
+- Cocos 兼容范围与实测版本按根 `AGENTS.md` 执行；包声明和产品介绍保持一致。
 - 面板显示版本必须读取 `package.json`，禁止再次硬编码。
 
 ## 分层约束

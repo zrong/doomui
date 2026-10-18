@@ -1,13 +1,13 @@
-# Figma Sync：Cocos Creator 3.8.6 插件设计
+# Figma Sync：Cocos Creator 插件设计
 
-> 更新日期：2026-09-02
+> 更新日期：2026-10-18
 >
 > Cocos 插件：`doomui/figma-sync`
 > Figma 插件：`doomui/cocos-sync`
 
 ## 1. 第一版边界
 
-第一版的持续同步只实现 `Figma → Cocos Creator 3.8.6 Prefab`：Figma Desktop 伴生插件手动单选或多选 Frame / Page 直属 Component 并推送，只处理明确选择的目标。DoomUI 不提供 PAT 或 Figma REST API 拉取入口。
+第一版的持续同步只实现 `Figma → Cocos Creator Prefab`，Creator 兼容范围为 `>=3.8.6 <3.9.0`，运行态验收基线为 3.8.6：Figma Desktop 伴生插件手动单选或多选 Frame / Page 直属 Component 并推送，只处理明确选择的目标。DoomUI 不提供 PAT 或 Figma REST API 拉取入口。
 
 为已有 UI 或 Item 建立设计起点，允许用户显式触发一次 `Cocos Prefab → Figma Frame / Component` bootstrap。源可以是任意现有 `db://assets/**/*.prefab`；用户显式选择导入为 Frame 或 Component，目录不再参与类型判定。流程不复制源文件、不持续反向同步、不自动合并双端改动；完成节点映射后仍回到上述单向链路。
 
@@ -113,7 +113,7 @@ target 非直接父节点、同轴中心与边同时启用、混合绝对/百分
 
 字体必须显式配置 `Figma family/style = db://...ttf|otf`。缺失映射时使用系统字体并警告，不猜测项目文件名。
 
-一次性 Cocos → Figma 接管时，Cocos 3.8.6 的 Label 粗体、斜体、下划线、overflow/wrap、描边和单阴影进入协议 v6；旧 Prefab 中独立的 `cc.LabelOutline`、`cc.LabelShadow` 也会规范化。反向同步只接受一个可见 SOLID stroke 和一个普通 DROP_SHADOW；这些映射保留参数语义，但不承诺两个渲染器逐像素一致。接管创建 Text 时固定为源 `UITransform` 尺寸，避免 Figma 字体度量把文本框自动收缩；若接管映射中的初次尺寸仍未被设计师修改，标准化会恢复源尺寸、overflow/wrap，并按尺寸差的一半修正中心坐标。Figma 没有 `SHRINK` 等价文本框，因此导入时保留固定尺寸并警告，回传降级为 `CLAMP`。
+一次性 Cocos → Figma 接管时，兼容范围内 Cocos Label 的粗体、斜体、下划线、overflow/wrap、描边和单阴影进入协议 v6；旧 Prefab 中独立的 `cc.LabelOutline`、`cc.LabelShadow` 也会规范化。反向同步只接受一个可见 SOLID stroke 和一个普通 DROP_SHADOW；这些映射保留参数语义，但不承诺两个渲染器逐像素一致。接管创建 Text 时固定为源 `UITransform` 尺寸，避免 Figma 字体度量把文本框自动收缩；若接管映射中的初次尺寸仍未被设计师修改，标准化会恢复源尺寸、overflow/wrap，并按尺寸差的一半修正中心坐标。Figma 没有 `SHRINK` 等价文本框，因此导入时保留固定尺寸并警告，回传降级为 `CLAMP`。
 
 Auto Layout 直接子节点仍由 Layout 独占定位。Sprite 的图片 alpha 双向保留；全不透明纯白源图转成可编辑 SOLID fill，普通图片的非白 RGB 染色只保留图片与 alpha 并警告。
 

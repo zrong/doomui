@@ -5,11 +5,11 @@
 - macOS
 - Node.js 18+
 - npm（使用各子项目已提交的 `package-lock.json`）
-- Cocos Creator 3.8.6
+- Cocos Creator `>=3.8.6 <3.9.0`
 - Figma Desktop
 - 推荐：`just`，可通过 `brew install just` 安装
 
-第一版只对以上宿主组合负责。Figma 网页版和 Cocos 3.8.x 其他小版本没有完成运行态验收。
+扩展兼容范围为 `>=3.8.6 <3.9.0`；当前运行态验收基线是 macOS + Figma Desktop + Creator 3.8.6。范围内其他补丁版本尚未逐一验收，Figma 网页版和 Windows 也未完成运行态验收；3.8.0–3.8.5 与 3.9.0 及以上不在兼容范围内。类型声明依赖与仓库 Sandbox 保持 3.8.6，不代表扩展只允许加载该版本。
 
 ## 根级命令接口
 
@@ -199,7 +199,7 @@ npm pack ./figma-sync --dry-run --json
 
 ### Figma 提示无法连接 Cocos
 
-- 确认打开的是 Cocos Creator 3.8.6 工程，并在“Desktop 连接”中确认本机服务已启动。
+- 确认当前 Creator 版本在 `>=3.8.6 <3.9.0` 范围内，并在“Desktop 连接”中确认本机服务已启动；复现验收基线时使用 3.8.6 打开 `sandbox/`。
 - 确认已提交 `manifest.json` 的发布版 `allowedDomains` 和开发版 `devAllowedDomains` 都只允许 `http://localhost:38638`；只配置开发版白名单会使 Community 安装版连接失败。
 - 扩展刚重载时旧 token 已失效，清除配对并使用新码。
 

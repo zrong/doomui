@@ -2,7 +2,7 @@
 
 ## 目标
 
-DoomUI 将用户明确选择的 Figma Frame / Page 直属 Component 转成 Cocos Creator 3.8.6 可增量更新的 View / Item 资源。它把设计维护的视觉层与程序维护的逻辑层分开，允许频繁更新视觉而不覆盖业务脚本和事件。
+DoomUI 将用户明确选择的 Figma Frame / Page 直属 Component 转成 Cocos Creator 可增量更新的 View / Item 资源，兼容范围为 `>=3.8.6 <3.9.0`，运行态验收基线为 3.8.6。它把设计维护的视觉层与程序维护的逻辑层分开，允许频繁更新视觉而不覆盖业务脚本和事件。
 
 ## 仓库结构
 
