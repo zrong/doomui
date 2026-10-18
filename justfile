@@ -20,7 +20,11 @@ build: cocos-build figma-build
 test: cocos-test
 
 # Run version validation, builds, type checks and tests
-check: version-check cocos-check figma-check
+check: version-check sandbox-check cocos-check figma-check
+
+# Validate the public sandbox asset graph and metadata
+sandbox-check:
+    node scripts/check-sandbox.mjs
 
 # Build the Cocos Creator extension
 cocos-build:

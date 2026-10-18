@@ -8,6 +8,16 @@
 
 本次整理保留运行时代码、协议、稳定插件身份、兼容 key、测试断言和数值，替换业务案例注释，移除个人路径、真实设计身份、资源 UUID、现场哈希和本机配置。下述既有宿主结论来自开源整理前的验收记录，经过泛化，不能作为本次公开副本已重新完成宿主验收的证明。
 
+## 2026-10-18：Sandbox 目录与公开演示
+
+- 验收目录统一为 `sandbox/`，工程身份 UUID 保留，工程版本固定为 Creator 3.8.6；根级链接命令、版本检查、忽略规则和文档同步迁移。
+- 合入独立制作的 ArticleDemo：一个可运行场景、最小按钮控制器、原始 Prefab、同步后的逻辑/视觉双 Prefab，以及 Creator 生成的全部 Meta。源工程中的资产逐字节复制；私有 Figma 映射、缓存、个人配置和扩展软链接不进入提交。
+- 自动化：既有 28 个测试文件、181 项测试通过，两端类型检查和构建通过；新增 `just sandbox-check` 验证 11 项公开资产、4 个场景/Prefab 的 Meta、项目 UUID、脚本类型和内置 SpriteFrame 引用。该检查纳入 `just check`。
+- 当前公开目录的 Cocos 运行态：Creator 3.8.6 首次导入后，AssetDB 确认场景、脚本及三个 Prefab 均为 imported=true、invalid=false；场景中的控制器和 Button 实际可用，标题为 `Daily Check-in · Updated`。三个面板宽 100/180/260、高 70，均使用 SLICED 并引用同一个引擎内置按钮 SpriteFrame。
+- 浏览器运行态：刷新后计数为 0，真实点击领取按钮后变为 1，奖励文字为 `Claimed 1 time(s)`；本轮浏览器未记录 error/warn。Creator 导入与运行后，所有公开资产及 Meta 的文件哈希与迁入前一致。
+- Fixture 制作时曾使用 DoomUI 26.42.29 完成真实 Figma → Preview → Apply 两轮操作，比较了逻辑 Prefab 哈希和视觉 UUID，并验证保存关闭重开与按钮点击。本次目录迁移复验覆盖 Creator 导入与浏览器运行，没有重新配对或再次执行 Figma Apply。
+- 重新同步该样例时，未配置的 Arial/ArialMT 会产生 9 条 FONT_UNMAPPED；保留为字体回退案例。四态按钮、动态列表、真机、正式构建及完整功能矩阵仍需单独验收。公开 `article_ui` 不携带私有同步映射，重新同步应使用独立的 `roundtrip` Bundle。
+
 ## 2026-10-17：Community 发布准备
 
 - 候选版本为 `26.42.29`，由维护者安装的 `git-commit` skill 在保留产品发布标签的仓库上下文生成；公开初始基线仍为 `26.36.28`。

@@ -10,7 +10,7 @@ DoomUI 将用户明确选择的 Figma Frame / Page 直属 Component 转成 Cocos
 doomui/
 ├── figma-sync/                 # Cocos Creator 扩展：Figma Sync
 ├── cocos-sync/                 # Figma Desktop 插件：Cocos Sync
-├── sandbox/      # Cocos Creator 3.8.6 验收工程
+├── sandbox/                    # Creator 3.8.6 公开演示与验收工程
 ├── docs/                       # 架构、协议、规范和验收真值
 ├── scripts/                    # 版本一致性工具
 ├── AGENTS.md                   # 全仓指导
@@ -48,7 +48,7 @@ doomui/
 
 - 宿主固定为 Cocos Creator 3.8.6。
 - 验证扩展加载、菜单、面板、Scene Script、asset-db 和 Prefab 运行态。
-- 隔离真实游戏工程；本地生成资源、映射和缓存不进入 Git。
+- `ArticleDemo` 的场景、最小控制器、双 Prefab 和 Meta 是可提交的公开离线 Fixture；私有设计输出、映射与宿主缓存保持本地。
 
 ## 界面工作流
 

@@ -35,7 +35,8 @@ sandbox/profiles/
 sandbox/local/
 sandbox/logs/
 sandbox/build/
-sandbox/extensions/figma-sync
+sandbox/extensions/
+sandbox/funplay-cocos-mcp.config.json
 
 # Generated sync output and project mapping from real designs
 sandbox/assets/figma-ui/

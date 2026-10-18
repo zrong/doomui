@@ -3,6 +3,13 @@
 /profiles/
 /local/
 /build/
-/extensions/figma-sync
+/extensions/
+/funplay-cocos-mcp.config.json
+/settings/v2/packages/figma-sync.json
+/settings/v2/packages/figma-ui-sync.json
+/settings/v2/packages/information.json
+/settings/v2/packages/cocos-service.json
+/assets/roundtrip/
+/assets/roundtrip.meta
 /assets/figma-ui/
 /assets/figma-ui.meta

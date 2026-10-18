@@ -24,6 +24,7 @@ just check                 # 版本、类型、构建和测试总检查
 just cocos-watch           # 监听 Cocos 扩展
 just figma-watch           # 监听 Figma 插件
 just sandbox-link          # 安全创建验收工程扩展软链接
+just sandbox-check         # 检查公开示例的 Meta、脚本与资源引用
 ```
 
 根命令只负责编排，实际构建仍由子项目 npm scripts 负责。遇到问题时可以进入子项目运行同名 npm 命令定位。
@@ -51,7 +52,7 @@ sandbox/extensions/figma-sync -> ../../figma-sync
 
 - `figma-sync/` 的 Cocos 扩展源码、测试、面板模板和包锁文件；
 - `cocos-sync/` 的 Figma 插件源码、带团队统一 plugin ID 的 `manifest.json` 和包锁文件；
-- `sandbox/` 的最小工程配置和占位资产，用于复现 Cocos Creator 3.8.6 验收环境；
+- `sandbox/` 的工程配置、公开 ArticleDemo 场景、控制器、双 Prefab 和对应 `.meta`，用于复现 Cocos Creator 3.8.6 演示与验收环境；
 - 根级文档、脚本、`justfile`、`VERSION` 和指导文件。
 
 以下内容只属于本机运行态，不得提交：
@@ -61,7 +62,7 @@ sandbox/extensions/figma-sync -> ../../figma-sync
 - Sandbox 中指向扩展源码的软链接；
 - 真实 Frame 生成资产、映射清单、配对码和会话 token。
 
-完整忽略规则以仓库根 `.gitignore` 为准。Sandbox 是可提交的验收工程骨架，不是要接入业务代码的真实游戏工程。
+完整忽略规则以仓库根 `.gitignore` 为准。Sandbox 提交的是公开离线 Fixture；重新同步使用独立的 `roundtrip` Bundle，并忽略其输出及本机映射。已有 `article_ui` Fixture 不携带私有 Figma 映射，首次 Apply 不得覆盖它。直接运行与重新同步的步骤见 [Sandbox 说明](../sandbox/README.md)。
 
 ## 启动 Cocos 插件
 
