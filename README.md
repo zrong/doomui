@@ -8,7 +8,7 @@ DoomUI 是一套面向 Cocos Creator 3.8.6 的 Figma UI 同步工具链。现有
 |---|---|---|
 | `figma-sync/` | Figma Sync | Cocos Creator 扩展；提供 Preview、Apply、Prefab/贴图写入和 Cocos Sync 本机服务 |
 | `cocos-sync/` | Cocos Sync | Figma Desktop 开发插件；导入 Cocos View / Item 与共享素材，或手动把明确选择的 Frame / Component 推送到 Cocos |
-| `figma-ui-sync-sandbox/` | Figma Sync Sandbox | Cocos Creator 3.8.6 最小验收工程，不接入真实游戏工程 |
+| `sandbox/` | Figma Sync Sandbox | Cocos Creator 3.8.6 最小验收工程，不接入真实游戏工程 |
 
 ## 快速开始
 
@@ -22,7 +22,7 @@ just sandbox-link
 
 随后：
 
-1. 用 Cocos Creator 3.8.6 打开 `figma-ui-sync-sandbox/`。
+1. 用 Cocos Creator 3.8.6 打开 `sandbox/`。
 2. 从 `扩展 → DoomUI → Figma Sync` 打开 Cocos 插件。
 3. 按 [开发指南](docs/development.md) 配置并导入 Figma 插件。
 4. 在 Figma Desktop 手动单选或多选需要同步的 Frame / Page 直属 Component，运行 `Cocos Sync`，配对后推送所选内容。

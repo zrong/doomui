@@ -28,10 +28,10 @@ for (const [relativePath, expectedName] of expectedPackages) {
   if (value.name !== expectedName) errors.push(`${relativePath} name=${value.name ?? '<missing>'}`);
   if (value.version !== version) errors.push(`${relativePath} version=${value.version ?? '<missing>'}`);
 }
-const sandbox = await readJson('figma-ui-sync-sandbox/package.json');
-if (sandbox.name !== 'figma-ui-sync-sandbox') errors.push(`figma-ui-sync-sandbox/package.json name=${sandbox.name ?? '<missing>'}`);
-if (sandbox.version !== '3.8.6') errors.push(`figma-ui-sync-sandbox/package.json version=${sandbox.version ?? '<missing>'}`);
-if (sandbox.creator?.version !== '3.8.6') errors.push(`figma-ui-sync-sandbox/package.json creator.version=${sandbox.creator?.version ?? '<missing>'}`);
+const sandbox = await readJson('sandbox/package.json');
+if (sandbox.name !== 'doomui-sandbox') errors.push(`sandbox/package.json name=${sandbox.name ?? '<missing>'}`);
+if (sandbox.version !== '3.8.6') errors.push(`sandbox/package.json version=${sandbox.version ?? '<missing>'}`);
+if (sandbox.creator?.version !== '3.8.6') errors.push(`sandbox/package.json creator.version=${sandbox.creator?.version ?? '<missing>'}`);
 for (const [relativePath, expectedName] of expectedLocks) {
   const value = await readJson(relativePath);
   if (value.name !== expectedName) errors.push(`${relativePath} name=${value.name ?? '<missing>'}`);

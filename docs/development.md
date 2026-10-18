@@ -40,7 +40,7 @@ just sandbox-link
 `sandbox-link` 只在目标不存在时创建：
 
 ```text
-figma-ui-sync-sandbox/extensions/figma-sync -> ../../figma-sync
+sandbox/extensions/figma-sync -> ../../figma-sync
 ```
 
 如果已有同名非软链接路径，命令会停止，不会覆盖。
@@ -51,7 +51,7 @@ figma-ui-sync-sandbox/extensions/figma-sync -> ../../figma-sync
 
 - `figma-sync/` 的 Cocos 扩展源码、测试、面板模板和包锁文件；
 - `cocos-sync/` 的 Figma 插件源码、带团队统一 plugin ID 的 `manifest.json` 和包锁文件；
-- `figma-ui-sync-sandbox/` 的最小工程配置和占位资产，用于复现 Cocos Creator 3.8.6 验收环境；
+- `sandbox/` 的最小工程配置和占位资产，用于复现 Cocos Creator 3.8.6 验收环境；
 - 根级文档、脚本、`justfile`、`VERSION` 和指导文件。
 
 以下内容只属于本机运行态，不得提交：
@@ -65,7 +65,7 @@ figma-ui-sync-sandbox/extensions/figma-sync -> ../../figma-sync
 
 ## 启动 Cocos 插件
 
-1. 用 Cocos Creator 3.8.6 打开 `figma-ui-sync-sandbox/`。
+1. 用 Cocos Creator 3.8.6 打开 `sandbox/`。
 2. 等待 asset-db ready 和扩展加载完成。
 3. 打开 `扩展 → DoomUI → Figma Sync`。
 4. 展开“Desktop 连接”，确认本机服务已启动并记录当前八位配对码。

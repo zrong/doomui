@@ -10,7 +10,7 @@ DoomUI 将用户明确选择的 Figma Frame / Page 直属 Component 转成 Cocos
 doomui/
 ├── figma-sync/                 # Cocos Creator 扩展：Figma Sync
 ├── cocos-sync/                 # Figma Desktop 插件：Cocos Sync
-├── figma-ui-sync-sandbox/      # Cocos Creator 3.8.6 验收工程
+├── sandbox/      # Cocos Creator 3.8.6 验收工程
 ├── docs/                       # 架构、协议、规范和验收真值
 ├── scripts/                    # 版本一致性工具
 ├── AGENTS.md                   # 全仓指导

@@ -53,7 +53,7 @@ figma-watch:
 # Create the sandbox extension symlink without replacing an unrelated path
 sandbox-link:
     #!/usr/bin/env bash
-    link="figma-ui-sync-sandbox/extensions/figma-sync"
+    link="sandbox/extensions/figma-sync"
     mkdir -p "$(dirname "$link")"
     if [ -L "$link" ]; then
         target=$(readlink "$link")

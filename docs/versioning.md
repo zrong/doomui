@@ -35,7 +35,7 @@ npx skills add zrong/skills --skill git-commit
 
 Cocos 面板运行时直接显示 `figma-sync/package.json` 的版本，禁止在模板中硬编码。
 
-`figma-ui-sync-sandbox/package.json.version` 是 Cocos Creator 工程版本，由 Creator 3.8.6 维护并固定为 `3.8.6`；它不是 DoomUI 产品版本，也不参与 CalVer 同步。`version-check` 会单独验证 sandbox 的 `version` 与 `creator.version` 都为 `3.8.6`。
+`sandbox/package.json.version` 是 Cocos Creator 工程版本，由 Creator 3.8.6 维护并固定为 `3.8.6`；它不是 DoomUI 产品版本，也不参与 CalVer 同步。`version-check` 会单独验证 sandbox 的 `version` 与 `creator.version` 都为 `3.8.6`。
 
 ## 校验与更新命令
 

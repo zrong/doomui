@@ -6,7 +6,7 @@
 
 - `figma-sync/` 是 Cocos Creator 3.8.6 扩展，包名和标题固定为 **Figma Sync**，入口固定为 `扩展 → DoomUI → Figma Sync`。
 - `cocos-sync/` 是 Figma Desktop 伴生插件，npm 包名和标题固定为 **Cocos Sync**。
-- `figma-ui-sync-sandbox/` 只用于 Cocos Creator 3.8.6 验收；禁止把它改造成真实游戏工程。
+- `sandbox/` 只用于 Cocos Creator 3.8.6 验收；禁止把它改造成真实游戏工程。
 - 设计、协议、制作规范、开发和验收文档统一放在 `docs/`；子项目 README 只保留该项目的最短入口说明。
 
 ## 固定产品决策
@@ -46,5 +46,5 @@
 ## 完成标准
 
 - 代码变更必须有与风险相称的自动测试，并运行 `just check`。
-- 涉及 Cocos/Figma 宿主行为的变更不能只以 TypeScript 构建成功宣称完成；应在 `figma-ui-sync-sandbox` 做运行态验收，或明确记录尚未完成的外部验收。
+- 涉及 Cocos/Figma 宿主行为的变更不能只以 TypeScript 构建成功宣称完成；应在 `sandbox` 做运行态验收，或明确记录尚未完成的外部验收。
 - 更新验收结论时要区分自动化、Cocos 运行态、Figma 运行态和真实设计端到端证据。
