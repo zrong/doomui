@@ -1,7 +1,7 @@
 {
   "package_version": 2,
   "name": "figma-sync",
-  "version": "26.42.29",
+  "version": "26.42.30",
   "description": "Sync a Figma Frame into Cocos Creator 3.8.6 visual and logic prefabs.",
   "author": "zrong",
   "main": "./dist/main.js",
