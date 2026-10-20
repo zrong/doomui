@@ -4,7 +4,11 @@ DoomUI 是一套连接 Figma 与 Cocos Creator 的开源 UI 工具链。设计�
 
 兼容范围：Cocos Creator `>=3.8.6 <3.9.0`。当前已在 macOS + Figma Desktop + Creator 3.8.6 完成运行态验证，范围内其他补丁版本尚未逐一验收。
 
-[DoomUI 官方网站](https://zengrong.net/project/doomui/) · [GitHub 源码](https://github.com/zrong/doomui)
+## 介绍与使用说明
+
+- [项目主页](https://zengrong.net/project/doomui/)：功能概览、安装入口与使用范围。
+- [博客详细介绍：美术切图，程序重拼：游戏 UI 同步的苦，能靠 AI 解决吗？](https://blog.zengrong.net/post/figma-cocos-ui-sync-doomui/)：方案思路、实际操作演示与技术边界。
+- 公众号介绍文章：[曾嵘胡扯的地方](https://mp.weixin.qq.com/s/vccYpNkPOvkver6p9zkGSw)、[胡扯游戏](https://mp.weixin.qq.com/s/CGEFPRsY129tJbpCztQrMQ)。
 
 ## 子项目
 
